@@ -29,10 +29,10 @@ body {
     /*----- OUTDOORS RAVINE -----*/
     /*background-image: url("../images/background/outdoors-ravine.jpeg");*/
 
-    background-repeat: no-repeat, no-repeat;
+    background-repeat: no-repeat;
     background-attachment: fixed;
-    background-position: center, center;
-    background-size: cover, cover;
+    background-position: center;
+    background-size: cover;
     min-height: 800px;
     min-width: 1280px;
 }

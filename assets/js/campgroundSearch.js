@@ -1,7 +1,3 @@
-// google map styling
-
-
-
 // google map
 
 function initMap() {
@@ -310,39 +306,10 @@ function geocodeAddress(geocoder, resultsMap) {
   });
 }
 
-// // Airbnb
-// var airbnbSearchURL = "https://api.airbnb.com/v2/search_results";
-// var airbnbReviewsURL = "https://api.airbnb.com/v2/reviews";
-// var airbnbListingURL = "https://api.airbnb.com/v2/listings/" + airbnbListingID;
-// var airbnbKey;
-//
 // // Google Maps
 // var geocodeQueryURL = "http://maps.googleapis.com/maps/api/geocode/json?";
 // var googleKey = "AIzaSyB7Jx7LHDrY7xzL20sBAdEYVe57v-Bgq34";
 // var googleAddress = results[0].formatted_address;
 // var googleLat = results[0].geometry.location.lat();
 // var googleLng = results[0].geometry.location.lng();
-//
-// // airbnb user input
-// var airbnbMinBathrooms;
-// var airbnbMinBedrooms;
-// var airbnbMinBeds;
-// var airbnbCity;
-// var airbnbMinPrice;
-// var airbnbMaxPrice;
-// var airbnbLat;
-// var airbnbLng;
-//
-// var airbnbLocationSearch = "&user_lat=" + airbnbLat + "&user_lng=" + airbnbLng;
-//
-// // airbnb get response
-// var airbnbReviewLimit;
-//
-// // aribnb listing info
-// var airbnbListingID;
-// var airbnbNumGuests;
 
-// airbnb ajax call
-// $.ajax({url: queryURL, method: "GET"}).done(function(response) {
-//
-// })
