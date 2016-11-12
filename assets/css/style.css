@@ -37,25 +37,6 @@ body {
     min-width: 1280px;
 }
 
-#campgroundSearchImg {
-    /*----- OUTDOORS RAVINE -----*/
-    background-image: url("../images/background/outdoors-ravine.jpeg");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
-    min-width: 1280px;
-}
-
-#lodgingSearchImg {
-    background-image: url("../images/background/outdoors-forest.jpeg");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
-    min-width: 1280px;
-}
-
 .fatface {
     font-family: 'Abril Fatface', cursive;
 }
