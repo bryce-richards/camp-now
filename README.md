@@ -1,4 +1,2 @@
 # secret-project
-It's a secret
-
-Kevin edits
+It's a secret, for now
