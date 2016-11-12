@@ -1,0 +1,97 @@
+body {
+    /*----- CAMPING-LAKE -----*/
+    /*background-image: url("../images/background/camping-lake.jpeg");*/
+
+    /*----- CAMPING-MOUNTAIN -----*/
+    /*background-image: url("../images/background/camping-mountain.jpeg");*/
+
+    /*----- CAMPING SUNRISE -----*/
+    /*background-image: url("../images/background/camping-sunrise.jpeg");*/
+
+    /*----- CAMPING SUNSET -----*/
+    background-image: url("../images/background/camping-sunset.jpeg");
+
+    /*----- CAMPING-SUNSET-2 -----*/
+    /*background-image: url("../images/background/camping-sunset-2.jpeg");*/
+
+    /*----- HIKING FOREST 3 -----*/
+    /*background-image: url("../images/background/hiking-forest-3.jpeg");*/
+
+    /*----- HIKING TRAIL 2 -----*/
+    /*background-image: url("../images/background/hiking-trail-2.jpeg");*/
+
+    /*----- HIKING TRAIL ----4*/
+    /*background-image: url("../images/background/hiking-trail-4.jpeg");*/
+
+    /*----- OUTDOORS FOREST -----*/
+    /*background-image: url("../images/background/outdoors-forest.jpeg");*/
+
+    /*----- OUTDOORS RAVINE -----*/
+    /*background-image: url("../images/background/outdoors-ravine.jpeg");*/
+
+    background-repeat: no-repeat, no-repeat;
+    background-attachment: fixed;
+    background-position: center, center;
+    background-size: cover, cover;
+    min-height: 800px;
+    min-width: 1280px;
+}
+
+#campgroundSearchImg {
+    /*----- OUTDOORS RAVINE -----*/
+    background-image: url("../images/background/outdoors-ravine.jpeg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    min-width: 1280px;
+}
+
+#lodgingSearchImg {
+    background-image: url("../images/background/outdoors-forest.jpeg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    min-width: 1280px;
+}
+
+.fatface {
+    font-family: 'Abril Fatface', cursive;
+}
+
+.permanent {
+    font-family: 'Permanent Marker', cursive;
+}
+
+.poiret {
+    font-family: 'Poiret One', cursive;
+}
+
+.sigmar {
+    font-family: 'Sigmar One', cursive;
+}
+
+.rakkas {
+    font-family: 'Rakkas', cursive;
+}
+
+.overlock {
+    font-family: 'Overlock', cursive;
+}
+
+.carter {
+    font-family: 'Carter One', cursive;
+}
+
+.forum {
+    font-family: 'Forum', cursive;
+}
+
+.bowlby {
+    font-family: 'Bowlby One SC', cursive;
+}
+
+.amatica {
+    font-family: 'Amatica SC', cursive;
+}
