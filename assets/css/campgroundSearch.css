@@ -1,22 +1,76 @@
 #map {
-    height: 100%;
+    min-height: 600px;
+    width: 100%;
+
 }
 /* Optional: Makes the sample page fill the window. */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    background-color: #060606;
 }
-#floating-panel {
+
+main {
+    margin-top: 50px;
+}
+
+#mapQuery {
+    color: #060606;
+    min-width: 200px;
+    font-family: 'Overlock', cursive;
+    font-size: 12px;
+    line-height: 6px;
     position: absolute;
-    top: 10px;
-    left: 25%;
+    top: 8%;
+    left: 1%;
     z-index: 5;
-    background-color: #fff;
-    padding: 5px;
-    border: 1px solid #999;
+    opacity: .3;
+    background-color: #9EC77b;
+    padding: 15px 10px;
+    box-shadow: 5px 5px 5px #30533C;
+}
+
+input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.formGroupLabel {
+    font-family: 'Patrick Hand SC', cursive;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+legend {
     text-align: center;
-    font-family: 'Roboto','sans-serif';
-    line-height: 30px;
-    padding-left: 10px;
+    border: none;
+}
+
+legend h2 {
+    color: #060606;
+    font-family: 'Permanent Marker', cursive;
+}
+
+.form-control {
+    margin-bottom: 2px;
+}
+
+#searchBtnGroup {
+    margin-bottom: 0;
+}
+
+#searchBtn {
+    margin: -5px auto;
+    background-color: #F59B5B;
+    border-color: #D2984E;
+}
+
+#resetBtn {
+    margin-left: 10px;
+    background-color: #FF0000;
+    border-color: #E82C0C
+}
+#mapQuery:hover {
+    opacity: .85;
+    background-color: #9ec77b;
 }

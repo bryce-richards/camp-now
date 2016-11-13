@@ -85,5 +85,25 @@ NAV
 
 GOOGLE MAPS
 - CAMPSITE SEARCH
-  - 
+  - Area
+  - Keyword
+  - Name
+  - Search Radius (need to convert to miles - default is 50,000 meters = 31.06856 miles)
+  - min Price?
+  - max Price?
+  - Type
+    - campground
+    - grocery_or_supermarket
+    - gas_station
+    - hardware_store
+    - train_station
+    - transit_station
+    - subway_station
+    - airport
+    - rv_park
+    - park
+    - parking
+    - lodging
+    rank by prominence
+    
 
