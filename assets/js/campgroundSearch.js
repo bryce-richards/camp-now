@@ -224,7 +224,7 @@ function initMap() {
           ]
         }
       ],
-      {name: 'retro'});
+      {name: 'Retro'});
 
   var desertMap = new google.maps.StyledMapType(
       [
@@ -412,11 +412,11 @@ function initMap() {
           ]
         }
       ],
-      {name: 'desert'});
+      {name: 'Desert'});
 
   var neonMap = new google.maps.StyledMapType(
       [{"stylers": [{"saturation": 100}, {"gamma": 0.6}]}],
-      {name: 'neon'});
+      {name: 'Neon'});
 
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 39.8282, lng: -98.5795},
@@ -445,7 +445,7 @@ function addMarker(location) {
   };
 
   var marker = new google.maps.Marker({
-    map: resultsMap,
+    map: map,
     position: location,
     draggable: true,
     icon: backpackIcon
