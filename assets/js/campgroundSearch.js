@@ -247,6 +247,7 @@ function initMap() {
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
+      console.log(position);
       homeMarker = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
@@ -272,26 +273,6 @@ function initMap() {
     var infoWindow = new google.maps.InfoWindow({map: map});
     handleLocationError(false, infoWindow, map.getCenter());
   }
-  // if user clicks on a new marker, display that info
-  var service = new google.maps.places.PlacesService(map);
-
-  // need to either update or remove
-  service.getDetails({
-    placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
-  }, function(place, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      var marker = new google.maps.Marker({
-        map: map,
-        position: place.geometry.location
-      });
-      google.maps.event.addListener(marker, 'click', function() {
-        infoWindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-            'Place ID: ' + place.place_id + '<br>' +
-            place.formatted_address + '</div>');
-        infoWindow.open(map, this);
-      });
-    }
-  });
 }
 // end of init map function
 
@@ -303,38 +284,9 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
       'Error: Your browser doesn\'t support geolocation.');
 }
 
-
-// Adds a marker to the map and push to the array.
-function addMarker(location, marker) {
-  var markerURL = "assets/images/icons/png/" + marker;
-  var backpackIcon = {
-    url: 'assets/images/icons/png/backpack.png',
-    scaledSize: new google.maps.Size(40, 40)
-  };
-
-  var marker = new google.maps.Marker({
-    map: map,
-    position: location,
-    draggable: true,
-    icon: backpackIcon
-  });
-  // add marker to markers array
-  markers.push(marker);
-
-  google.maps.event.addListener(marker, 'dragend', function(event) {
-    currentMarker.latitude = this.getPosition().lat();
-    currentMarker.longitude = this.getPosition().lng();
-    // replace last marker with new marker location
-    markers.pop();
-    markers.push(marker);
-  });
-}
-
 function getLocation(location) {
 
 }
-
-
 
 // Sets the map on all markers in the array.
 function setMapOnAll(map) {
@@ -358,25 +310,20 @@ function deleteMarkers() {
   clearMarkers();
   markers = [];
 }
-
 var corsProxy = "https://crossorigin.me/";
 var placesURL = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
-var searchRequest;
+var searchRequest = [];
 var googleKey = "key=AIzaSyB7Jx7LHDrY7xzL20sBAdEYVe57v-Bgq34";
 var componentsURL = "components=country:US&";
 
-$("#searchBtn").on('click', function(event) {
-  event.preventDefault();
+$("#searchBtn").on('click', function() {
 
   var queryURL = corsProxy + placesURL;
   var type;
 
-  // name
-  var nameInput = $("#nameSearch").val().trim();
-  // if there is a name, add to query url
-  if (nameInput) {
-    queryURL += jQuery.param({name : nameInput}) + "&";
-  }
+  // city
+  var cityInput = $("#citySearch").val().trim();
+
 
   // keyword
   var keywordInput = $("#keywordSearch").val().trim();
@@ -409,59 +356,96 @@ $("#searchBtn").on('click', function(event) {
   // add key to end of url
   queryURL += googleKey;
 
-  console.log(queryURL);
-
-  // ajax call to google places
   $.ajax({url: queryURL, method: 'GET'})
   .done(function(response) {
-    var results = response.results;
-    console.log(results);
-    // limit to top 10 responses
-    for (var i = 0; i < resultsInput; i++) {
-      // push response to array
-      searchRequest.push(results[i]);
+    if (response.status === "OK") {
+      var results = response.results;
+      console.log(results);
+      // limit to top 10 responses
+      for (var i = 0; i < resultsInput; i++) {
+        // push response to array
+        searchRequest.push(results[i]);
+      }
+      displayMarkers(searchRequest);
+    } else {
+      // TODO add an alert
+      console.log("No results found.")
     }
   });
 
-  // display all results
-  displayMarkers(searchRequest);
+  return false;
 });
 
 
+
+function markerType(type) {
+
+  if (type === "campground") {
+    return "bonfire.png";
+  }
+  if (type === "rv_park") {
+    return "caravan.png";
+  }
+  if (type === "lodging") {
+    return "cabin.png";
+  }
+  if (type === "park") {
+    return "picnic.png";
+  }
+}
+
 // function to display search results on the map
 function displayMarkers(requestArray) {
+  console.log("display Markers");
+  console.log(requestArray);
   for (var i = 0; i < requestArray.length; i++) {
+    console.log(requestArray[i]);
+    var placeID = requestArray[i].place_id;
     var type = requestArray[i].types[0];
-    var markerIcon = marketType(type);
+    var markerIcon = markerType(type);
     var rating = requestArray[i].rating;
-    var name = requestArray.[i].name;
+    var name = requestArray[i].name;
     var address = requestArray[i].formatted_address;
+    var photo = requestArray[i].photos["0"].html_attributions["0"]
     var location = {
       lat : requestArray[i].geometry.location.lat,
       lng : requestArray[i].geometry.location.lng
-    }
-
+    };
+    addMarker(location, markerIcon);
   }
+
+  // set view to fit markers
+  var bounds = new google.maps.LatLngBounds();
+  for (var i = 0; i < markers.length; i++) {
+    bounds.extend(markers[i].getPosition());
+  }
+
+  map.fitBounds(bounds);
 }
 
+
+
+// Adds a marker to the map and push to the array.
+function addMarker(location, markerType) {
+  var markerURL = "assets/images/icons/png/" + markerType;
+  var markerIcon = {
+    url: markerURL,
+    scaledSize: new google.maps.Size(40, 40)
+  };
+
+  var marker = new google.maps.Marker({
+    map: map,
+    position: location,
+    draggable: true,
+    icon: markerIcon
+  });
+
+  // add marker to markers array
+  markers.push(marker);
+
+}
 // function that returns a specific icon based on the place type
-function markerType(place) {
 
-  var pngURL = "../images/icons/png/";
-  if (place === "campground") {
-    return pngURL + "bonfire.png";
-  }
-  if (place === "rv_park") {
-    // TODO: need to add icon for RV
-    return pngURL + "caravan.png";
-  }
-  if (place === "lodging") {
-    return pngURL + "cabin.png";
-  }
-  if (place === "park") {
-    return pngURL + "picnic.png";
-  }
-}
 // // Google Maps
 
 //
