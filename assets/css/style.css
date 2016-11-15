@@ -1,4 +1,4 @@
-body {
+.intro-header {
     /*----- CAMPING-LAKE -----*/
     /*background-image: url("../images/background/camping-lake.jpeg");*/
 
@@ -9,10 +9,10 @@ body {
     /*background-image: url("../images/background/camping-sunrise.jpeg");*/
 
     /*----- CAMPING SUNSET -----*/
-    background-image: url("../images/background/camping-sunset.jpeg");
+	/*background-image: url("../images/background/camping-sunset.jpeg");*/
 
     /*----- CAMPING-SUNSET-2 -----*/
-    /*background-image: url("../images/background/camping-sunset-2.jpeg");*/
+    background-image: url("../images/background/camping-sunset-2.jpeg");
 
     /*----- HIKING FOREST 3 -----*/
     /*background-image: url("../images/background/hiking-forest-3.jpeg");*/
@@ -37,6 +37,9 @@ body {
     min-width: 1280px;
 }
 
+#icons img {
+	width: 50px;
+}
 .fatface {
     font-family: 'Abril Fatface', cursive;
 }
