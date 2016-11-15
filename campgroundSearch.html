@@ -31,130 +31,132 @@
 
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
-    <div class="container topnav">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand topnav forum" href="#">Camp Now</a>
-      </div>
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right forum">
-          <li>
-            <a href="#about">About</a>
-          </li>
-          <li>
-            <a href="#services">Services</a>
-          </li>
-          <li>
-            <a href="#register">Register</a>
-          </li>
-          <li>
-            <a href="#contact">Contact</a>
-          </li>
-        </ul>
-      </div>
-      <!-- /.navbar-collapse -->
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+  <div class="container topnav">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand topnav forum" href="#">Camp Now</a>
     </div>
-    <!-- /.container -->
-  </nav>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right forum">
+        <li>
+          <a href="#about">About</a>
+        </li>
+        <li>
+          <a href="#services">Services</a>
+        </li>
+        <li>
+          <a href="#register">Register</a>
+        </li>
+        <li>
+          <a href="#contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container -->
+</nav>
 
-  <main class="container">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="row">
-          <form id="mapQuery">
-            <fieldset>
-              <legend><h2>Map Search</h2></legend>
-              <div class="form-group">
-                <label class="formGroupLabel" for="citySearch">City</label>
-                <div>
-                  <input type="text" class="form-control" id="citySearch" placeholder="i.e. Los Angeles">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="formGroupLabel" for="keywordSearch">Keyword</label>
-                <input type="text" class="form-control" id="keywordSearch" placeholder="i.e. waterfall, desert">
-              </div>
-              <div class="form-group">
-                <label class="formGroupLabel" for="nameSearch">Name</label>
-                <input type="text" class="form-control" id="nameSearch" placeholder="i.e. Joshua Tree, Grand Canyon">
-              </div>
-              <div class="form-group" id="locationsGroup">
-                <label class="formGroupLabel">Location Type (at least one)</label>
-                <div>
-                  <label>
-                    <input type="checkbox" id="campgroundSearch">
-                  Campground
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type="checkbox" id="rvSearch">
-                    RV Park
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type="checkbox" id="lodgingSearch">
-                    Lodging
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type="checkbox" id="parkSearch">
-                    Park
-                  </label>
-                </div>
-              </div>
-              <div class="form-group" id="transportationGroup">
-                <label class="formGroupLabel">Transportation</label>
-                <div>
-                  <label>
-                    <input type="checkbox" id="airportSearch">
-                    Airport
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type="checkbox" id="gasSearch">
-                    Gas Station
-                  </label>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="formGroupLabel">Search Radius</label>
-                <select class="form-control" id="radiusSearch"required>
-                  <option id="5miles">5 miles</option>
-                  <option id="20miles">20 miles</option>
-                  <option id="50miles">50 miles</option>
-                  <option id="100miles">100 miles</option>
-                </select>
-              </div>
-              <div class="form-group" id="searchBtnGroup">
-                <button type="submit" class="btn" id="searchBtn">Search</button>
-                <button onclick="clearMarkers();" type="reset" class="btn" id="resetBtn">Reset Map</button>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12">
-            <div id="map">
-              <p>Click on the map to add markers.</p>
+<main class="container">
+  <section class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="row">
+        <form id="mapQuery">
+          <fieldset>
+            <legend><h2>Map Search</h2></legend>
+            <div class="form-group">
+              <label class="formGroupLabel" for="nameSearch">Name</label>
+              <input type="text" class="form-control" id="nameSearch" placeholder="i.e. Joshua Tree">
             </div>
+            <div class="form-group">
+              <label class="formGroupLabel" for="keywordSearch">Keyword</label>
+              <input type="text" class="form-control" id="keywordSearch" placeholder="i.e. waterfall, desert">
+            </div>
+          </fieldset>
+          <fieldset>
+            <div class="form-group" id="locationsGroup">
+              <label class="formGroupLabel">Location Type (select one)</label>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="campType" id="campgroundSearch" value="campground" checked="checked">
+                  Campground
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="campType" id="rvSearch" value="rv_park">
+                  RV Park
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="campType" id="lodgingSearch" value="lodging">
+                  Lodging
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="campType" id="parkSearch" value="park">
+                  Park
+                </label>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <div class="form-group">
+              <label class="formGroupLabel">Search Radius</label>
+              <select class="form-control" id="radiusSearch">
+                <option value="5">5 miles</option>
+                <option value="10">10 miles</option>
+                <option value="20">20 miles</option>
+                <option value="50">50 miles</option>
+                <option value="100">100 miles</option>
+
+              </select>
+            </div>
+          </fieldset>
+            <div class="form-group">
+              <label class="formGroupLabel">Results</label>
+              <select class="form-control" id="resultsSearch">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+              </select>
+            </div>
+          <fieldset>
+          </fieldset>
+            <div class="form-group" id="searchBtnGroup">
+              <button type="submit" class="btn" id="searchBtn">Search</button>
+              <button onclick="clearMarkers();" type="reset" class="btn" id="resetBtn">Reset Map</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div id="map">
+            <p>Click on the map to add markers.</p>
           </div>
         </div>
       </div>
     </div>
-  </main>
+  </section>
+  <!--END OF MAP SECTION-->
+
+  <!--RESULTS SECTION-->
+  <section class="row">
+
+  </section>
+</main>
 
 <!-- Menu Toggle Script -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB7Jx7LHDrY7xzL20sBAdEYVe57v-Bgq34&libraries=places&callback=initMap">

@@ -31,8 +31,12 @@ main {
     box-shadow: 5px 5px 5px #30533C;
 }
 
-input[type="checkbox"] {
-    margin-right: 10px;
+option {
+    text-align: center;
+}
+.radio input[type="radio"] {
+    position: inherit;
+    margin-right: 5px;
 }
 
 .formGroupLabel {

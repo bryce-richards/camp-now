@@ -1,13 +1,12 @@
 // google map
 var markers = [];
-var homeMarker = {
-  latitude : 0,
-  longitude : 0
-};
+var homeMarker;
 
 var map;
 // initial map display on page load
 function initMap() {
+
+  // retro map style
   var retroMap = new google.maps.StyledMapType(
       [
         {
@@ -224,200 +223,9 @@ function initMap() {
           ]
         }
       ],
-      {name: 'Retro'});
+      {name: 'retro'});
 
-  var desertMap = new google.maps.StyledMapType(
-      [
-        {
-          "elementType": "labels",
-          "stylers": [
-            {
-              "visibility": "off"
-            },
-            {
-              "color": "#f49f53"
-            }
-          ]
-        },
-        {
-          "featureType": "landscape",
-          "stylers": [
-            {
-              "color": "#f9ddc5"
-            },
-            {
-              "lightness": -7
-            }
-          ]
-        },
-        {
-          "featureType": "road",
-          "stylers": [
-            {
-              "color": "#813033"
-            },
-            {
-              "lightness": 43
-            }
-          ]
-        },
-        {
-          "featureType": "poi.business",
-          "stylers": [
-            {
-              "color": "#645c20"
-            },
-            {
-              "lightness": 38
-            }
-          ]
-        },
-        {
-          "featureType": "water",
-          "stylers": [
-            {
-              "color": "#1994bf"
-            },
-            {
-              "saturation": -69
-            },
-            {
-              "gamma": 0.99
-            },
-            {
-              "lightness": 43
-            }
-          ]
-        },
-        {
-          "featureType": "road.local",
-          "elementType": "geometry.fill",
-          "stylers": [
-            {
-              "color": "#f19f53"
-            },
-            {
-              "weight": 1.3
-            },
-            {
-              "visibility": "on"
-            },
-            {
-              "lightness": 16
-            }
-          ]
-        },
-        {
-          "featureType": "poi.business"
-        },
-        {
-          "featureType": "poi.park",
-          "stylers": [
-            {
-              "color": "#645c20"
-            },
-            {
-              "lightness": 39
-            }
-          ]
-        },
-        {
-          "featureType": "poi.school",
-          "stylers": [
-            {
-              "color": "#a95521"
-            },
-            {
-              "lightness": 35
-            }
-          ]
-        },
-        {
-          "featureType": "poi.medical",
-          "elementType": "geometry.fill",
-          "stylers": [
-            {
-              "color": "#813033"
-            },
-            {
-              "lightness": 38
-            },
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "elementType": "labels"
-        },
-        {
-          "featureType": "poi.sports_complex",
-          "stylers": [
-            {
-              "color": "#9e5916"
-            },
-            {
-              "lightness": 32
-            }
-          ]
-        },
-        {
-          "featureType": "poi.government",
-          "stylers": [
-            {
-              "color": "#9e5916"
-            },
-            {
-              "lightness": 46
-            }
-          ]
-        },
-        {
-          "featureType": "transit.station",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "transit.line",
-          "stylers": [
-            {
-              "color": "#813033"
-            },
-            {
-              "lightness": 22
-            }
-          ]
-        },
-        {
-          "featureType": "transit",
-          "stylers": [
-            {
-              "lightness": 38
-            }
-          ]
-        },
-        {
-          "featureType": "road.local",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "color": "#f19f53"
-            },
-            {
-              "lightness": -10
-            }
-          ]
-        }
-      ],
-      {name: 'Desert'});
-
-  var neonMap = new google.maps.StyledMapType(
-      [{"stylers": [{"saturation": 100}, {"gamma": 0.6}]}],
-      {name: 'Neon'});
-
+  // create new google map centered on U.S.
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 39.8282, lng: -98.5795},
     zoom: 5,
@@ -426,21 +234,81 @@ function initMap() {
     }
   });
 
+  // set style of map
   map.mapTypes.set('styled_map', retroMap);
   map.setMapTypeId('styled_map');
 
+  // allows user to click on map and add to
   map.addListener('click', function (event) {
-    addMarker(event.latLng);
+    addMarker(event.latLng, "backpack.png");
   });
+
+
+  // Try HTML5 geolocation.
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      homeMarker = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      var lodgeIcon = {
+        url: 'assets/images/icons/png/lodge.png',
+        scaledSize: new google.maps.Size(40, 40)
+      };
+
+      var marker = new google.maps.Marker({
+        map: map,
+        draggable: false,
+        position: homeMarker,
+        icon: lodgeIcon
+      });
+
+      map.setCenter(homeMarker);
+
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    var infoWindow = new google.maps.InfoWindow({map: map});
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+  // if user clicks on a new marker, display that info
+  var service = new google.maps.places.PlacesService(map);
+
+  // need to either update or remove
+  service.getDetails({
+    placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
+  }, function(place, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      var marker = new google.maps.Marker({
+        map: map,
+        position: place.geometry.location
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        infoWindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+            'Place ID: ' + place.place_id + '<br>' +
+            place.formatted_address + '</div>');
+        infoWindow.open(map, this);
+      });
+    }
+  });
+}
+// end of init map function
+
+// error handling function
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(browserHasGeolocation ?
+      'Error: The Geolocation service failed.' :
+      'Error: Your browser doesn\'t support geolocation.');
 }
 
 
-
-
 // Adds a marker to the map and push to the array.
-function addMarker(location) {
+function addMarker(location, marker) {
+  var markerURL = "assets/images/icons/png/" + marker;
   var backpackIcon = {
-    url: 'assets/images/icons/png/backpack-1.png',
+    url: 'assets/images/icons/png/backpack.png',
     scaledSize: new google.maps.Size(40, 40)
   };
 
@@ -465,26 +333,8 @@ function addMarker(location) {
 function getLocation(location) {
 
 }
-function displayMarkers(requestArray) {
-
-}
 
 
-function markerType(place) {
-  var pngURL = "../images/icons/png/";
-  if (place = "campground") {
-    return pngURL + "campfire.png";
-  }
-  if (place = "gas_station") {
-    return pngURL +  "gasoline.pmg";
-  }
-  if (place = "lodging") {
-    return pngURL + "lodge.png";
-  }
-  if (place = "park") {
-    return pngURL + "picnic.png";
-  }
-}
 
 // Sets the map on all markers in the array.
 function setMapOnAll(map) {
@@ -509,91 +359,109 @@ function deleteMarkers() {
   markers = [];
 }
 
+var corsProxy = "https://crossorigin.me/";
 var placesURL = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
 var searchRequest;
-var geocodeURL = "http://maps.googleapis.com/maps/api/geocode/json?";
-var googleKey = "&key=AIzaSyB7Jx7LHDrY7xzL20sBAdEYVe57v-Bgq34";
+var googleKey = "key=AIzaSyB7Jx7LHDrY7xzL20sBAdEYVe57v-Bgq34";
+var componentsURL = "components=country:US&";
 
-document.getElementById('searchBtn').on('click', function(event) {
+$("#searchBtn").on('click', function(event) {
   event.preventDefault();
 
-  var queryURL = placesURL;
-  var cityGeoURL;
-  var types = [];
-  var cityInput = $("#citySearch").val().trim();
-  var cityLat;
-  var cityLng;
-  cityGeoURL = geocodeURL + cityInput + googleKey;
+  var queryURL = corsProxy + placesURL;
+  var type;
 
-  $.ajax({url: cityGeoURL, method: 'GET'})
-    .done(function(response) {
-    var results = response.data;
-    cityLat = results[0].geometry.location.lat();
-    cityLng = results[0].geometry.location.lng();
+  // name
+  var nameInput = $("#nameSearch").val().trim();
+  // if there is a name, add to query url
+  if (nameInput) {
+    queryURL += jQuery.param({name : nameInput}) + "&";
+  }
+
+  // keyword
+  var keywordInput = $("#keywordSearch").val().trim();
+  // if there is a keyword, add to query url
+  if (keywordInput) {
+    queryURL += jQuery.param({keyword : keywordInput}) + "&";
+  }
+
+  $("input:radio").each(function() {
+    if ($(this).is(":checked")) {
+      type = $(this).val();
+    }
   });
 
-  if (cityGeoURL) {
-    queryURL += "location=" + cityLang + ", " + cityLng + "&";
-  }
-  var keywordInput = $("#keywordSearch").val().trim();
-  if (keywordInput) {
-    queryURL += "keyword=" + keywordInput + "&";
-  }
-  var nameInput = $("#nameSearch").val().trim();
-  if (name) {
-    queryURL += "name=" + nameInput + "&";
-  }
-  var campgroundYes = $("#campgroundSearch").is(checked);
-  if (campgroundYes) {
-    types.push("campground |");
-  }
-  var rvYes = $("#rvSearch").is(checked);
-  if (campgroundYes) {
-    types.push("rv_park |");
-  }
-  var lodgingYes = $("#lodgingSearch").is(checked);
-  if (campgroundYes) {
-    types.push("lodging |");
-  }
-  var parkYes = $("#parkSearch").is(checked);
-  if (campgroundYes) {
-    types.push("park |");
-  }
-  var airportYes = $("#airportSearch").is(checked);
-  if (campgroundYes) {
-    types.push("airport |");
-  }
-  var gasYes = $("#gasSearch").is(checked);
-  if (campgroundYes) {
-    types.push("gas_station |");
-  }
-  if (types.length < 1) {
-    return false;
-  } else {
-    queryURL += "types=" + types + "&";
-  }
-  var radiusInput = $("#radiusSearch").val();
+  queryURL += jQuery.param({type : type}) + "&";
 
+  // add components for us filtering
+  queryURL += componentsURL;
+
+  // search radius
+  var radiusInput = parseInt($("#radiusSearch").val());
   // convert miles to meters
   radiusInput *= 1609.34;
+  // add radius to url
+  queryURL += jQuery.param({radius : radiusInput}) + "&";
 
-  queryURL += "radius=" + radiusInput;
+  // search results
+  var resultsInput = parseInt($("#resultsSearch").val());
 
-  requestURL = placesURL +
+  // add key to end of url
+  queryURL += googleKey;
 
-  $.ajax({url: requestURL, method: 'GET'})
-      .done(function(response) {
-        console.log(response);
-        for (var i = 0; i < response.length; i++) {
-          searchRequest.push(response);
-        }
+  console.log(queryURL);
 
-      });
+  // ajax call to google places
+  $.ajax({url: queryURL, method: 'GET'})
+  .done(function(response) {
+    var results = response.results;
+    console.log(results);
+    // limit to top 10 responses
+    for (var i = 0; i < resultsInput; i++) {
+      // push response to array
+      searchRequest.push(results[i]);
+    }
+  });
 
+  // display all results
   displayMarkers(searchRequest);
 });
 
 
+// function to display search results on the map
+function displayMarkers(requestArray) {
+  for (var i = 0; i < requestArray.length; i++) {
+    var type = requestArray[i].types[0];
+    var markerIcon = marketType(type);
+    var rating = requestArray[i].rating;
+    var name = requestArray.[i].name;
+    var address = requestArray[i].formatted_address;
+    var location = {
+      lat : requestArray[i].geometry.location.lat,
+      lng : requestArray[i].geometry.location.lng
+    }
+
+  }
+}
+
+// function that returns a specific icon based on the place type
+function markerType(place) {
+
+  var pngURL = "../images/icons/png/";
+  if (place === "campground") {
+    return pngURL + "bonfire.png";
+  }
+  if (place === "rv_park") {
+    // TODO: need to add icon for RV
+    return pngURL + "caravan.png";
+  }
+  if (place === "lodging") {
+    return pngURL + "cabin.png";
+  }
+  if (place === "park") {
+    return pngURL + "picnic.png";
+  }
+}
 // // Google Maps
 
 //
@@ -602,4 +470,5 @@ document.getElementById('searchBtn').on('click', function(event) {
 // var googleLng = results[0].geometry.location.lng();
 
 
-
+// hiking api
+// var hikingURL = "https://trailapi-trailapi.p.mashape.com/";
