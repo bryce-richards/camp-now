@@ -246,8 +246,7 @@ function initMap() {
 
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      console.log(position);
+    navigator.geolocation.getCurrentPosition(function (position) {
       homeMarker = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
@@ -274,6 +273,7 @@ function initMap() {
     handleLocationError(false, infoWindow, map.getCenter());
   }
 }
+
 // end of init map function
 
 // error handling function
@@ -284,9 +284,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
       'Error: Your browser doesn\'t support geolocation.');
 }
 
-function getLocation(location) {
-
-}
 
 // Sets the map on all markers in the array.
 function setMapOnAll(map) {
@@ -306,76 +303,112 @@ function showMarkers() {
 }
 
 // Deletes all markers in the array by removing references to them.
-function deleteMarkers() {
+$("#resetBtn").on("click", function() {
   clearMarkers();
   markers = [];
-}
+  initMap();
+});
+
 var corsProxy = "https://crossorigin.me/";
 var placesURL = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
 var searchRequest = [];
 var googleKey = "key=AIzaSyB7Jx7LHDrY7xzL20sBAdEYVe57v-Bgq34";
 var componentsURL = "components=country:US&";
 
-$("#searchBtn").on('click', function() {
+
+$("#searchBtn").on("click", function(event) {
+  event.preventDefault();
 
   var queryURL = corsProxy + placesURL;
-  var type;
 
-  // city
+  var coordinatesURL;
+
+  var textURL = "";
+
+  var type = "";
+
+  // city input
   var cityInput = $("#citySearch").val().trim();
-
-
-  // keyword
+  // state input
+  var stateInput = $("#stateSearch").val();
+  // keyword input
   var keywordInput = $("#keywordSearch").val().trim();
-  // if there is a keyword, add to query url
-  if (keywordInput) {
-    queryURL += jQuery.param({keyword : keywordInput}) + "&";
-  }
-
-  $("input:radio").each(function() {
+  // type input
+  $("input:radio").each(function () {
     if ($(this).is(":checked")) {
       type = $(this).val();
     }
   });
-
-  queryURL += jQuery.param({type : type}) + "&";
-
-  // add components for us filtering
-  queryURL += componentsURL;
-
-  // search radius
+  // search radius input
   var radiusInput = parseInt($("#radiusSearch").val());
   // convert miles to meters
   radiusInput *= 1609.34;
-  // add radius to url
-  queryURL += jQuery.param({radius : radiusInput}) + "&";
+  // if city is not blank
 
-  // search results
-  var resultsInput = parseInt($("#resultsSearch").val());
+  if (cityInput) {
 
-  // add key to end of url
-  queryURL += googleKey;
-
-  $.ajax({url: queryURL, method: 'GET'})
-  .done(function(response) {
-    if (response.status === "OK") {
-      var results = response.results;
-      console.log(results);
-      // limit to top 10 responses
-      for (var i = 0; i < resultsInput; i++) {
-        // push response to array
-        searchRequest.push(results[i]);
-      }
-      displayMarkers(searchRequest);
-    } else {
-      // TODO add an alert
-      console.log("No results found.")
+    if (stateInput) {
+      cityInput += ", " + stateInput;
     }
-  });
+    textURL += cityInput;
+      // get geo coordinates of city input
+      var geocoder = new google.maps.Geocoder();
 
-  return false;
+      geocoder.geocode({'address': cityInput}, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          var location = results[0].geometry.location;
+          coordinatesURL = jQuery.param({location: location.lat()}) + "," + location.lng() + "&";
+          buildQuery();
+        }
+      });
+  } else {
+    buildQuery();
+  }
+
+  function buildQuery() {
+
+    // if there is a keyword, add to query url
+    if (keywordInput) {
+      textURL += keywordInput;
+    }
+
+    textURL = textURL.split(" ").join("+");
+
+    queryURL += jQuery.param({query : textURL}) + "&";
+
+    queryURL += coordinatesURL;
+
+    queryURL += componentsURL;
+
+    queryURL += jQuery.param({type: type}) + "&";
+
+    // add components for us filtering
+
+    // add radius to url
+    queryURL += jQuery.param({radius: radiusInput}) + "&";
+
+    // search results
+    var resultsInput = parseInt($("#resultsSearch").val());
+
+    // add key to end of url
+    queryURL += googleKey;
+    $.ajax({url: queryURL, method: 'GET'})
+    .done(function (response) {
+      if (response.status === "OK") {
+        var results = response.results;
+        // limit to top 10 responses
+        for (var i = 0; i < resultsInput; i++) {
+          // push response to array
+          searchRequest.push(results[i]);
+          displayMarkers(searchRequest);
+        }
+      } else {
+        // TODO add an alert
+        console.log("No results found.")
+      }
+    });
+  }
 });
-
 
 
 function markerType(type) {
@@ -396,33 +429,29 @@ function markerType(type) {
 
 // function to display search results on the map
 function displayMarkers(requestArray) {
-  console.log("display Markers");
-  console.log(requestArray);
   for (var i = 0; i < requestArray.length; i++) {
-    console.log(requestArray[i]);
-    var placeID = requestArray[i].place_id;
+    // var placeID = requestArray[i].place_id;
     var type = requestArray[i].types[0];
     var markerIcon = markerType(type);
-    var rating = requestArray[i].rating;
-    var name = requestArray[i].name;
-    var address = requestArray[i].formatted_address;
-    var photo = requestArray[i].photos["0"].html_attributions["0"]
+    // var rating = requestArray[i].rating;
+    // var name = requestArray[i].name;
+    // var address = requestArray[i].formatted_address;
+    // var photo = requestArray[i].photos["0"].html_attributions["0"];
     var location = {
-      lat : requestArray[i].geometry.location.lat,
-      lng : requestArray[i].geometry.location.lng
+      lat: requestArray[i].geometry.location.lat,
+      lng: requestArray[i].geometry.location.lng
     };
     addMarker(location, markerIcon);
   }
 
   // set view to fit markers
   var bounds = new google.maps.LatLngBounds();
-  for (var i = 0; i < markers.length; i++) {
-    bounds.extend(markers[i].getPosition());
+  for (var j = 0; j < markers.length; j++) {
+    bounds.extend(markers[j].getPosition());
   }
 
   map.fitBounds(bounds);
 }
-
 
 
 // Adds a marker to the map and push to the array.
@@ -444,15 +473,4 @@ function addMarker(location, markerType) {
   markers.push(marker);
 
 }
-// function that returns a specific icon based on the place type
 
-// // Google Maps
-
-//
-// var googleAddress = results[0].formatted_address;
-// var googleLat = results[0].geometry.location.lat();
-// var googleLng = results[0].geometry.location.lng();
-
-
-// hiking api
-// var hikingURL = "https://trailapi-trailapi.p.mashape.com/";

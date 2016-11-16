@@ -104,6 +104,5 @@ GOOGLE MAPS
     - park
     - parking
     - lodging
-    rank by prominence
     
 
