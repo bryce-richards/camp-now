@@ -50,11 +50,19 @@ btnGoogle.addEventListener('click', function () {
 
 // Add login event
 btnLogin.addEventListener('click', e => {
+	
+	$("#firstName,#lastName,#btnSignUp").hide();
+	$('#btnLogin').html("Login");
+	
+	var firstName = txtFirstName.value;
+	var lastName = txtLastName.value;
 	var email = txtEmail.value;
 	var pass = txtPassword.value;
 	var auth = firebase.auth();
 	
 	var userInfo = {
+		firstName: firstName,
+		lastName: lastName,
 		email: email,
 		pass: pass,
 		
@@ -68,11 +76,16 @@ btnLogin.addEventListener('click', e => {
 
 // Add signup event
 btnSignUp.addEventListener('click', e => {
+	
+	var firstName = txtFirstName.value;
+	var lastName = txtLastName.value;
 	var email = txtEmail.value;
 	var pass = txtPassword.value;
 	var auth = firebase.auth();
 	
 	var userInfo = {
+		firstName: firstName,
+		lastName: lastName,
 		email: email,
 		pass: pass,
 		
@@ -97,7 +110,7 @@ btnLogOut.addEventListener('click', e => {
 });
 
 
-// Add a realtime listener
+// Realtime listener
 firebase.auth().onAuthStateChanged(firebaseUser => {
 	if (firebaseUser) {
 		console.log(firebaseUser);
