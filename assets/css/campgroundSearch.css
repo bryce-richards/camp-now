@@ -1,34 +1,24 @@
-#map {
-    min-height: 600px;
-    width: 100%;
-
-}
-/* Optional: Makes the sample page fill the window. */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #060606;
+    background-color: #1A4A14;
 }
 
 main {
     margin-top: 50px;
 }
 
+#map {
+    min-height: 600px;
+    width: 100%;
+}
 #mapQuery {
-    color: #060606;
-    min-width: 200px;
+    width: 100%;
+    height: 600px;
+    padding: 10px 10px 0 20px;
+    line-height: 14px;
     font-family: 'Overlock', cursive;
-    font-size: 12px;
-    line-height: 6px;
-    position: absolute;
-    top: 8%;
-    left: 2%;
-    z-index: 5;
-    opacity: .3;
-    background-color: #9EC77b;
-    padding: 15px 10px;
-    box-shadow: 5px 5px 5px #30533C;
 }
 
 option {
@@ -51,7 +41,6 @@ legend {
 }
 
 legend h2 {
-    color: #060606;
     font-family: 'Permanent Marker', cursive;
 }
 
@@ -63,18 +52,75 @@ legend h2 {
     margin-bottom: 0;
 }
 
+#mapButton {
+    background-color: #A5B076;
+    font-family: 'Overlock', cursive;
+    font-size: 16px;
+}
+
 #searchBtn {
-    margin: -5px auto;
+    float: left;
+    margin-left: 10px;
     background-color: #F59B5B;
     border-color: #D2984E;
 }
 
 #resetBtn {
-    margin-left: 10px;
+    float: right;
+    margin-right: 10px;
     background-color: #FF0000;
-    border-color: #E82C0C
+    border-color: #E82C0C;
 }
-#mapQuery:hover {
-    opacity: .85;
-    background-color: #9ec77b;
+
+/* UI 24 */
+.ui-24{
+    width:313px;
+    height: 600px;
+    background-color: white;
+    box-shadow:0px 0px 1px rgba(0,0,0,0.5);
+    position:absolute;
+    left:-300px;
+    border-top-right-radius:5px;
+    border-bottom-right-radius:5px;
+    z-index:1000;
+}
+
+@media (max-width:400px){
+    .ui-24{
+        display:none;
+    }
+}
+/* Button */
+.ui-24  .ui-button a{
+    padding:10px;
+    top:50%;
+    margin-top:-50px;
+    left:285px;
+    width:100px;
+    display:block;
+    z-index:1000;
+    -ms-transform: rotate(270deg); /* IE 9 */
+    -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
+    transform: rotate(270deg);
+    position:absolute;
+    text-align:center;
+    color:#fff;
+    font-size:14px;
+    font-weight:600;
+    border-bottom-left-radius:3px;
+    border-bottom-right-radius:3px;
+}
+/* UI Content */
+.ui-24 .ui-content{
+    /*text-align:center;*/
+    /*padding:20px;*/
+}
+
+/* Heading */
+.ui-24 .ui-content h5{
+    text-transform:uppercase;
+    font-size:12px;
+}
+.ui-24 .ui-content h5 a{
+    color:#999;
 }

@@ -104,5 +104,9 @@ GOOGLE MAPS
     - park
     - parking
     - lodging
+
+have button at bottom of the screen that brings you further down on the screen to the map results. you can still scroll up, but it appears after you search.
+
+Game where you try to break the code, but there’s an algorithm driven by keystrokes. It’s more than just a pen and paper code. Like we can show them the answer and then a garbled message, and they have to guess what the algorithm is. like every third and fourth letter are swapped and blah blah blah.
     
 
