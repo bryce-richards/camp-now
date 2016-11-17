@@ -44,6 +44,10 @@ legend h2 {
     font-family: 'Permanent Marker', cursive;
 }
 
+.form-group {
+    margin-bottom: 5px;
+}
+
 .form-control {
     margin-bottom: 2px;
 }

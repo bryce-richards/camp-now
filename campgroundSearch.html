@@ -84,6 +84,10 @@
               <fieldset>
                 <legend><h2>Map Search</h2></legend>
                 <div class="form-group">
+                  <label class="formGroupLabel" for="latLngSearch">Latitude, Longitude</label>
+                  <input type="text" class="form-control" id="latLngSearch">
+                </div>
+                <div class="form-group">
                   <label class="formGroupLabel" for="destinationSearch">Destination</label>
                   <input type="text" class="form-control" id="destinationSearch" placeholder="i.e. Joshua Tree">
                 </div>
@@ -177,12 +181,7 @@
                 </div>
                 <div class="form-group">
                   <label class="formGroupLabel">Search Radius</label>
-                  <select class="form-control" id="radiusSearch">
-                    <option value="10">10 miles</option>
-                    <option value="20">20 miles</option>
-                    <option value="50">50 miles</option>
-                    <option value="100">100 miles</option>
-                  </select>
+                  <input type="number" class="form-control" id="radiusSearch" value="50">
                 </div>
                 <div class="form-group">
                   <label class="formGroupLabel">Results</label>
