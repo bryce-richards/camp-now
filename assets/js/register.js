@@ -15,16 +15,20 @@ var btnLogin = document.getElementById('btnLogin');
 var btnSignUp = document.getElementById('btnSignUp');
 var btnLogOut = document.getElementById('btnLogOut');
 var btnGoogle = document.getElementById('btnGoogle');
+  this.userPic = document.getElementById('user-pic');
+  this.userName = document.getElementById('user-name');
+
+var database = firebase.database();
 
 // Google Sign in
-debugger;
+
 btnGoogle.addEventListener('click', function () {
 
 	var provider = new firebase.auth.GoogleAuthProvider();
 	provider.addScope('https://www.googleapis.com/auth/plus.login');
 
 	firebase.auth().signInWithPopup(provider).then(function (result) {
-		debugger;
+		
 		// This gives you a Google Access Token. You can use it to access the Google API.
 		var token = result.credential.accessToken;
 		// The signed-in user info.
@@ -49,6 +53,13 @@ btnLogin.addEventListener('click', e => {
 	var email = txtEmail.value;
 	var pass = txtPassword.value;
 	var auth = firebase.auth();
+	
+	var userInfo = {
+		email: email,
+		pass: pass,
+		
+	}
+	database.ref().push(userInfo);
 	// Sign in
 	var promise = auth.signInWithEmailAndPassword(email, pass);
 	promise.catch(e => console.log(e.message));
@@ -60,11 +71,27 @@ btnSignUp.addEventListener('click', e => {
 	var email = txtEmail.value;
 	var pass = txtPassword.value;
 	var auth = firebase.auth();
+	
+	var userInfo = {
+		email: email,
+		pass: pass,
+		
+	}
+	database.ref().push(userInfo);
 	// Create User
 	var promise = auth.createUserWithEmailAndPassword(email, pass);
 	promise.catch(e => console.log(e.message));
 });
 
+// Store User into Database
+database.ref().on("child_added", function (childSnapshot) {
+	
+	var email = childSnapshot.val().email;
+	var pass = childSnapshot.val().pass;
+});
+
+
+// Logout
 btnLogOut.addEventListener('click', e => {
 	firebase.auth().signOut();
 });
@@ -74,6 +101,17 @@ btnLogOut.addEventListener('click', e => {
 firebase.auth().onAuthStateChanged(firebaseUser => {
 	if (firebaseUser) {
 		console.log(firebaseUser);
+		var profilePicUrl = firebaseUser.photoURL;   // TODO(DEVELOPER): Get profile pic.
+    var userName = firebaseUser.displayName;        // TODO(DEVELOPER): Get user's name.
+
+    // Set the user's profile pic and name.
+    this.userPic.style.backgroundImage = 'url(' + profilePicUrl + ')';
+    this.userName.textContent = userName;
+
+    // Show user's profile and sign-out button.
+    this.userName.removeAttribute('hidden');
+    this.userPic.removeAttribute('hidden');
+		
 		btnLogOut.classList.remove('hide');
 		//		window.close();
 	} else {
