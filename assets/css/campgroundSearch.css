@@ -38,6 +38,7 @@ option {
 legend {
     text-align: center;
     border: none;
+    margin-bottom: 0;
 }
 
 legend h2 {
@@ -56,22 +57,44 @@ legend h2 {
     margin-bottom: 0;
 }
 
+#resultsBtn {
+    font-family: 'Overlock', cursive;
+    background-color: #A07C9C;
+    border-color: #D888A7;
+    position: fixed;
+    bottom: -50px;
+    font-size: 16px;
+    color: white;
+    z-index:1000;
+    text-align: center;
+    font-weight:600;
+    border-top-left-radius:3px;
+    border-top-right-radius:3px;
+}
+
 #mapButton {
+    color: white;
     background-color: #A5B076;
     font-family: 'Overlock', cursive;
     font-size: 16px;
 }
 
 #searchBtn {
+    font-family: 'Overlock', cursive;
     float: left;
-    margin-left: 10px;
+    margin-left: 20px;
+    color: black;
+    font-size: 16px;
     background-color: #F59B5B;
     border-color: #D2984E;
 }
 
 #resetBtn {
+    font-family: 'Overlock', cursive;
     float: right;
-    margin-right: 10px;
+    margin-right: 20px;
+    color: black;
+    font-size: 16px;
     background-color: #FF0000;
     border-color: #E82C0C;
 }
@@ -80,7 +103,7 @@ legend h2 {
 .ui-24{
     width:313px;
     height: 600px;
-    background-color: white;
+    background-color: #F6EBB4;
     box-shadow:0px 0px 1px rgba(0,0,0,0.5);
     position:absolute;
     left:-300px;
@@ -95,11 +118,11 @@ legend h2 {
     }
 }
 /* Button */
-.ui-24  .ui-button a{
+.ui-24  .ui-button button{
     padding:10px;
     top:50%;
     margin-top:-50px;
-    left:285px;
+    left:284px;
     width:100px;
     display:block;
     z-index:1000;
@@ -108,8 +131,8 @@ legend h2 {
     transform: rotate(270deg);
     position:absolute;
     text-align:center;
-    color:#fff;
-    font-size:14px;
+    /*color:#fff;*/
+    /*font-size:14px;*/
     font-weight:600;
     border-bottom-left-radius:3px;
     border-bottom-right-radius:3px;
