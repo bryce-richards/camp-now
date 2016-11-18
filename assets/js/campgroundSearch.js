@@ -24,7 +24,7 @@ var map;
 // initial map display on page load
 function initMap() {
   $("#results").hide();
-
+  $("#resultsTableBody").empty();
   // retro map style
   var retroMap = new google.maps.StyledMapType(
       [
@@ -365,9 +365,13 @@ $("#resetBtn").on("click", function() {
   if ($(".ui-24").hasClass("open")) {
     $(".ui-24").animate({"left":"-300px"},"300").removeClass("open");
   }
+  $("#resultsBtn").fadeIn(500);
   initMap();
+  $("#resultsSearch").val(20);
   clearMarkers();
-  circle.setMap(null);
+  if (circle) {
+    circle.setMap(null);
+  }
 });
 var corsProxy = "https://crossorigin.me/";
 var placesURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
@@ -545,7 +549,7 @@ function buildMarkers(requestArray) {
     }
     var rating = requestArray[i].rating;
     var name = requestArray[i].name;
-    var address = requestArray[i].formatted_address;
+    // var address = requestArray[i].formatted_address;
     var vicinity = requestArray[i].vicinity;
     var location = {
       lat: requestArray[i].geometry.location.lat,
@@ -554,6 +558,7 @@ function buildMarkers(requestArray) {
     addMarker(location, markerIcon, name, rating, vicinity);
     displayResults(name, rating, placeID);
   }
+  $("#results").show();
   $("#resultsBtn").fadeIn(500);
   // set view to fit markers
   var bounds = new google.maps.LatLngBounds();
@@ -576,17 +581,13 @@ function displayResults(name, rating, id) {
 }
 
 
-$("#resultsBtn").on("click", function(event) {
-  event.preventDefault();
+$("#resultsLink").on("click", function() {
   $("#resultsBtn").fadeOut(500);
-  setTimeout(function() {
-    $("#results").show()
-  }, 500);
 });
 
-$(document).getElementsByClass("saveBtn").on("click", function(event) {
-  event.preventDefault();
-});
+// $(document).getElementsByClass("saveBtn").on("click", function(event) {
+//   event.preventDefault();
+// });
 
 // Adds a marker to the map and push to the array.
 function addMarker(location, markerType, name, rating, vicinity) {
@@ -608,7 +609,7 @@ function addMarker(location, markerType, name, rating, vicinity) {
       globalInfoWindow.close();
     }
     // map.setCenter(marker.getPosition());
-    globalInfoWindow.setContent("<div><h3>" + name + "</h3></div><div><h6>Vicinity: " + vicinity + "</h6></div><div><h6>Rating: " + rating + "</h6></div>");
+    globalInfoWindow.setContent("<div><h5>" + name + "</h5></div><div><h6>Vicinity: " + vicinity + "</h6></div><div><h6>Rating: " + rating + "</h6></div>");
     globalInfoWindow.open(map, this);
   });
   markers.push(marker);

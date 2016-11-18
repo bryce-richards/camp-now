@@ -14,9 +14,10 @@ main {
     width: 100%;
 }
 #mapQuery {
+    color: #9EC77B;
     width: 100%;
     height: 600px;
-    padding: 10px 10px 0 20px;
+    padding: 0 10px 0 20px;
     line-height: 14px;
     font-family: 'Overlock', cursive;
 }
@@ -35,14 +36,12 @@ option {
     margin-bottom: 5px;
 }
 
-legend {
+#searchHeader {
     text-align: center;
     border: none;
-    margin-bottom: 0;
-}
-
-legend h2 {
+    margin: 0;
     font-family: 'Permanent Marker', cursive;
+    color: #89DE7F;
 }
 
 .form-group {

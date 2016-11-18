@@ -82,7 +82,7 @@
           <div class="col-md-12 col-sm-12 col-xs-12">
             <form id="mapQuery">
               <fieldset>
-                <legend><h2>Map Search</h2></legend>
+                <h1 id="searchHeader">Map Search</h1>
                 <div class="form-group">
                   <label class="formGroupLabel" for="destinationSearch">Destination</label>
                   <input type="text" class="form-control" id="destinationSearch" placeholder="i.e. Joshua Tree">
@@ -181,7 +181,7 @@
                 </div>
                 <div class="form-group">
                   <label class="formGroupLabel">Search Radius</label>
-                  <input type="number" class="form-control" id="radiusSearch" value="50">
+                  <input type="number" class="form-control" id="radiusSearch" value="20">
                 </div>
                 <div class="form-group">
                   <label class="formGroupLabel">Results</label>
@@ -212,11 +212,11 @@
   <div class="row">
     <div class="col-lg-2 col-lg-offset-5 col-md-2 col-md-offset-5 col-sm-2 col-sm-offset-5">
       <button class="btn" id="resultsBtn">
-          <a href="#results">See Results</a>
+          <a id="resultsLink" href="#results">See Results</a>
       </button>
     </div>
   </div>
-</main>
+
 <!--END OF MAP SECTION-->
 
   <!--RESULTS SECTION-->
@@ -239,6 +239,7 @@
     </div>
   </section>
 </div>
+</main>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
