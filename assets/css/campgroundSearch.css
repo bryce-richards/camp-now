@@ -60,9 +60,9 @@ legend h2 {
 #resultsBtn {
     font-family: 'Overlock', cursive;
     background-color: #A07C9C;
-    border-color: #D888A7;
     position: fixed;
-    bottom: -50px;
+    bottom: 0px;
+    display: none;
     font-size: 16px;
     color: white;
     z-index:1000;
@@ -70,6 +70,17 @@ legend h2 {
     font-weight:600;
     border-top-left-radius:3px;
     border-top-right-radius:3px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-shadow: none;
+}
+#resultsBtn a {
+    font-size: 16px;
+    color: white;
+    font-weight:600;
+    text-align: center;
+    font-family: 'Overlock', cursive;
 }
 
 #mapButton {

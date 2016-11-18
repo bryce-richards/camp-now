@@ -7,15 +7,6 @@ $(document).ready(function(){
       $(".ui-24").animate({"left":"0px"},"300").addClass("open");
     }
   });
-  $("#resultsBtn").click(function(event) {
-    event.preventDefault();
-    if ($("#resultsBtn").hasClass("open")) {
-      $("#resultsBtn").animate({"bottom":"-50px"},"300").removeClass("open");
-      $("#results").show();
-    } else {
-      $("#resultsBtn").animate({"bottom":"0px"},"300").addClass("open");
-    }
-  })
 });
 
 // save homemarker for future directions feature
@@ -364,6 +355,7 @@ function setMapOnAll(map) {
 
 // Removes the markers from the map, but keeps them in the array.
 function clearMarkers() {
+  markers = [];
   setMapOnAll(null);
 }
 
@@ -381,7 +373,6 @@ var corsProxy = "https://crossorigin.me/";
 var placesURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 var googleKey = "key=AIzaSyCdoBhJmWHEJOiiQdnUZLTGsHblPpbYvr0";
 var componentsURL = "components=country:US&";
-var photosURL = "https://maps.googleapis.com/maps/api/place/photo?"
 
 $("#searchBtn").on("click", function(event) {
   event.preventDefault();
@@ -389,9 +380,7 @@ $("#searchBtn").on("click", function(event) {
   $("#resultsTableBody").empty();
   clearMarkers();
   var searchRequest = [];
-  if ($("#resultsBtn").hasClass("open")) {
-    $("#resultsBtn").animate({"bottom":"-50px"},"300").removeClass("open");
-  }
+
   if ($(".ui-24").hasClass("open")) {
     $(".ui-24").animate({"left":"-300px"},"300").removeClass("open");
   }
@@ -505,15 +494,15 @@ $("#searchBtn").on("click", function(event) {
           for (var i = 0; i < results.length; i++) {
             // push response to array
             searchRequest.push(results[i]);
-            buildMarkers(searchRequest);
           }
+          buildMarkers(searchRequest);
         } else {
           for (var j = 0; j < resultsInput; j++) {
             // push response to array
             searchRequest.push(results[j]);
-            buildMarkers(searchRequest);
 
           }
+          buildMarkers(searchRequest);
         }
       } else {
         var infoWindow = new google.maps.InfoWindow({map: map});
@@ -557,17 +546,15 @@ function buildMarkers(requestArray) {
     var rating = requestArray[i].rating;
     var name = requestArray[i].name;
     var address = requestArray[i].formatted_address;
+    var vicinity = requestArray[i].vicinity;
     var location = {
       lat: requestArray[i].geometry.location.lat,
       lng: requestArray[i].geometry.location.lng
     };
-    addMarker(location, markerIcon, name, rating, address);
-    displayResults(markerIcon, photoRef, name, rating, placeID);
+    addMarker(location, markerIcon, name, rating, vicinity);
+    displayResults(name, rating, placeID);
   }
-  if (!$("#resultsBtn").hasClass("open")) {
-    $("#resultsBtn").animate({"bottom": "0px"}, "300").addClass("open");
-    $("#results").show();
-  }
+  $("#resultsBtn").fadeIn(500);
   // set view to fit markers
   var bounds = new google.maps.LatLngBounds();
   for (var j = 0; j < markers.length; j++) {
@@ -576,51 +563,33 @@ function buildMarkers(requestArray) {
   map.fitBounds(bounds);
 }
 
-function displayResults(markerType, photo, name, rating, id) {
-  var referenceURL = corsProxy+ photosURL + "maxwidth=200&";
+function displayResults(name, rating, id) {
   var tableRow = $("<tr>");
-  var rowType = $("<tr>");
-  rowTypeIcon = ("<img>");
-  rowTypeIcon.attr("src", "assets/images/icons/png/" + markerType);
-  rowTypeIcon.width("200px");
-  rowType.append(rowTypeIcon);
   var rowName = $("<td>");
   rowName.html("<h2>" + name + "</h2>");
   var rowRating = $("<td>");
   rowRating.html("<h3>" + rating + "</h3>");
-  var rowButton = $("<button>").attr("id", id).text("Save to My List");
-  var rowPhoto = $("<td>");
-  if (photo) {
-    referenceURL += "photoreference=" + photo + "&" + googleKey;
-    console.log(referenceURL);
-    $.ajax({url: referenceURL, method: 'GET'})
-    .done(function (response) {
-      if (response.status === "OK") {
-        console.log(response);
-        var rowPhotoImage = $("<img>");
-        rowPhotoImage.attr("src", response);
-        rowPhoto.append(rowPhotoImage);
-        appendResult();
-      } else {
-        rowPhoto.html("No Photo Available");
-        appendResult();
-      }
-    });
-    rowPhoto.html("No Photo Available")
-  } else {
-    rowPhoto.html("No Photo Available");
-    appendResult();
-  }
+  var rowButton = $("<button>").addClass("saveBtn").attr("id", id).text("Save to My List");
 
-  function appendResult() {
-    tableRow.append(rowType).append(rowName).append(rowPhoto).append(rowRating).append(rowButton);
+    tableRow.append(rowName).append(rowRating).append(rowButton);
     $("#resultsTableBody").append(tableRow);
-  }
 }
 
 
+$("#resultsBtn").on("click", function(event) {
+  event.preventDefault();
+  $("#resultsBtn").fadeOut(500);
+  setTimeout(function() {
+    $("#results").show()
+  }, 500);
+});
+
+$(document).getElementsByClass("saveBtn").on("click", function(event) {
+  event.preventDefault();
+});
+
 // Adds a marker to the map and push to the array.
-function addMarker(location, markerType, name, rating, address) {
+function addMarker(location, markerType, name, rating, vicinity) {
   var markerURL = "assets/images/icons/png/" + markerType;
   var markerIcon = {
     url: markerURL,
@@ -639,7 +608,7 @@ function addMarker(location, markerType, name, rating, address) {
       globalInfoWindow.close();
     }
     // map.setCenter(marker.getPosition());
-    globalInfoWindow.setContent("<div><h4>" + name + "</h4></div><div><h5>Address: " + address + "</h5></div></div><div><h6>Rating: " + rating + "</h6></div>");
+    globalInfoWindow.setContent("<div><h3>" + name + "</h3></div><div><h6>Vicinity: " + vicinity + "</h6></div><div><h6>Rating: " + rating + "</h6></div>");
     globalInfoWindow.open(map, this);
   });
   markers.push(marker);
