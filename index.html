@@ -10,7 +10,10 @@
 	<meta name="author" content="">
 
 	<title>Landing Page - Start Bootstrap Theme</title>
-
+	
+	<!--Firebase-->
+	<script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
+	
 	<!-- Bootstrap Core CSS -->
 	<link href="assets/css/startbootstrap/bootstrap.min.css" rel="stylesheet">
 
@@ -59,11 +62,16 @@
 						<a href="#services">Services</a>
 					</li>
 					<li>
-						<a href="#contact">Contact</a>
+						<a href="contact.html">Contact</a>
 					</li>
 					<li>
-						<a href="#" value="Open popup" onclick="window.open('register.html', '_blank', 'height=600px, width= 700px')">Register</a>
+						<a href="#" value="Open popup" id="registerLink" onclick="window.open('register.html', '_blank', 'height=600px, width= 700px')">Register</a>
 					</li>
+						<li>
+						<span id="userDisplay"></span>
+
+					</li>
+				
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -85,14 +93,8 @@
 						<hr class="intro-divider">
 						<!--Icons-->
 						<div class="row" id="icons">
-							<div class="col-lg-3">
-								<span class="network-name bowlby">Plan a Trip</span>
-								<br>
-								<a href="#"><img src="assets/images/icons/landing-page/planner-icon.png"></a>
-
-							</div>
-
-							<div class="col-lg-3">
+							
+							<div class="col-lg-3 col-lg-offset-3">
 								<span class="network-name bowlby">Plan a Campsite</span>
 								<br>
 								<a href="#"><img src="assets/images/icons/landing-page/campsite-icon.png"></a>
@@ -106,13 +108,6 @@
 
 							</div>
 
-
-							<div class="col-lg-3">
-								<span class="network-name bowlby">Find a Lodge</span>
-								<br>
-								<a href="#"><img src="assets/images/icons/landing-page/lodge-icon.png"></a>
-								</div>
-							</div>
 							<!--/Icons-->
 						</div>
 					</div>
@@ -129,23 +124,7 @@
 		<a name="services"></a>
 		<div class="content-section-a">
 
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-5 col-sm-6">
-						<hr class="section-heading-spacer">
-						<div class="clearfix"></div>
-						<h2 class="section-heading permanent">Trip Planner</h2>
-						<p class="lead overlock">Map out a route for your next great adventure.</p>
-					</div>
-					<div class="col-lg-5 col-lg-offset-2 col-sm-6">
-						<img class="img-responsive" src="assets/images/travel/forest-road-2.jpeg" alt="">
-					</div>
-				</div>
-
 			</div>
-			<!-- /.container -->
-
-		</div>
 		<!-- /.content-section-a -->
 
 		<div class="content-section-a">
@@ -160,7 +139,7 @@
 						<p class="lead overlock">Find a campsite that matches your needs, from a tent in the desert to a cabin in the woods.</p>
 					</div>
 					<div class="col-lg-5 col-sm-pull-6 col-sm-6">
-						<img class="img-responsive" src="assets/images/background/camping-sunset-2.jpeg" alt="">
+						<img class="img-responsive" src="assets/images/background/camping-campfire.jpeg" alt="">
 					</div>
 				</div>
 
@@ -192,27 +171,6 @@
 		</div>
 		<!-- /.content-section-a -->
 
-		<div class="content-section-a">
-
-			<div class="container">
-
-				<div class="row">
-					<div class="col-lg-5 col-lg-offset-1 col-sm-push-6 col-sm-6">
-						<hr class="section-heading-spacer">
-						<div class="clearfix"></div>
-						<h2 class="section-heading permanent">Lodging</h2>
-						<p class="lead overlock">Glamping more your style? Compare lodging rentals and reviews based on your criteria.</p>
-					</div>
-					<div class="col-lg-5 col-sm-pull-6 col-sm-6">
-						<img class="img-responsive" src="assets/images/travel/cabin-2.jpg" alt="">
-					</div>
-				</div>
-
-			</div>
-			<!-- /.container -->
-
-		</div>
-		<!-- /.content-section-a -->
 
 		<!-- Footer -->
 		<footer>
@@ -247,6 +205,9 @@
 
 		<!-- jQuery -->
 		<script src="assets/js/startbootstrap/jquery.js"></script>
+		
+		<!-- Register JS -->
+		<script src="assets/js/register.js"></script>
 
 		<!-- Bootstrap Core JavaScript -->
 		<script src="assets/js/startbootstrap/bootstrap.min.js"></script>

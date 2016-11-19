@@ -15,11 +15,23 @@ var btnLogin = document.getElementById('btnLogin');
 var btnSignUp = document.getElementById('btnSignUp');
 var btnLogOut = document.getElementById('btnLogOut');
 var btnGoogle = document.getElementById('btnGoogle');
-  this.userPic = document.getElementById('user-pic');
-  this.userName = document.getElementById('user-name');
+var userInfo = document.getElementById('registerLink');
 
 var database = firebase.database();
 
+// Realtime listener
+firebase.auth().onAuthStateChanged(firebaseUser => {
+	if (firebaseUser) {
+		console.log(firebaseUser);
+		
+		$('#registerLink').html("Hello " + firebaseUser.displayName);
+		btnLogOut.classList.remove('hide');
+//				window.close();
+	} else {
+		console.log('not logged in');
+		btnLogOut.classList.add('hide');
+	}
+	
 // Google Sign in
 
 btnGoogle.addEventListener('click', function () {
@@ -51,7 +63,7 @@ btnGoogle.addEventListener('click', function () {
 // Add login event
 btnLogin.addEventListener('click', e => {
 	
-	$("#firstName,#lastName,#btnSignUp").hide();
+	$("#txtFirstName,#txtLastName,#btnSignUp").hide();
 	$('#btnLogin').html("Login");
 	
 	var firstName = txtFirstName.value;
@@ -94,6 +106,7 @@ btnSignUp.addEventListener('click', e => {
 	// Create User
 	var promise = auth.createUserWithEmailAndPassword(email, pass);
 	promise.catch(e => console.log(e.message));
+	
 });
 
 // Store User into Database
@@ -110,25 +123,5 @@ btnLogOut.addEventListener('click', e => {
 });
 
 
-// Realtime listener
-firebase.auth().onAuthStateChanged(firebaseUser => {
-	if (firebaseUser) {
-		console.log(firebaseUser);
-		var profilePicUrl = firebaseUser.photoURL;   // TODO(DEVELOPER): Get profile pic.
-    var userName = firebaseUser.displayName;        // TODO(DEVELOPER): Get user's name.
 
-    // Set the user's profile pic and name.
-    this.userPic.style.backgroundImage = 'url(' + profilePicUrl + ')';
-    this.userName.textContent = userName;
-
-    // Show user's profile and sign-out button.
-    this.userName.removeAttribute('hidden');
-    this.userPic.removeAttribute('hidden');
-		
-		btnLogOut.classList.remove('hide');
-		//		window.close();
-	} else {
-		console.log('not logged in');
-		btnLogOut.classList.add('hide');
-	}
 });
