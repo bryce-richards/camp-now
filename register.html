@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Sign In or Register</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+	<script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+
+	<link rel="stylesheet" href="assets/css/style-register.css">
+</head>
+
+<body>
+
+	<div class="container" id="signIn-div">
+		
+		<div hidden id="user-pic"></div>
+		<div hidden id="user-name"></div>
+        
+        <input id="txtFirstName" type="text" style="color:white;" placeholder="First Name">
+        
+        <input id="txtLastName" type="text" style="color:white;" placeholder="Last Name">
+        
+		<input id="txtEmail" type="email" style="color:white;" placeholder="Email">
+
+		<input id="txtPassword" type="password" style="color: white;" placeholder="Password">
+		
+		<button id="btnSignUp" class="btn btn-secondary">Sign Up</button>
+
+		<button id="btnLogin" class="btn btn-action">Have an account? Login Here</button>
+
+		<button id="btnLogOut" class="btn btn-action hide">Log Out</button>
+	
+	<div class="row">
+		<button id="btnGoogle" class="btn btn-action">Sign in with Google</button>
+	</div>
+	</div>
+
+	<!--jQuery-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	
+	<!-- JavaScript -->
+	<script src="assets/js/register.js"></script>
+
+</body>
+
+</html>

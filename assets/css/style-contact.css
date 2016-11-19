@@ -1,0 +1,14 @@
+body {
+	background-image: url("../images/background/camping-night-3.jpeg");
+	background-repeat: no-repeat, no-repeat;
+    background-attachment: fixed;
+    background-position: center, center;
+    background-size: cover, cover;
+    min-height: 500px;
+    min-width: 500px;
+	color: white;
+}
+
+button {
+	color: black;
+}

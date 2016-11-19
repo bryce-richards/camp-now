@@ -1,0 +1,17 @@
+body {
+	background-image: url("../images/background/camping-sunset.jpeg");
+	background-repeat: no-repeat, no-repeat;
+    background-attachment: fixed;
+    background-position: center, center;
+    background-size: cover, cover;
+    min-height: 500px;
+    min-width: 500px;
+}
+
+#signIn-div {
+	margin-top: 120px;
+}
+
+#btnGoogle {
+	margin-top: 100px;
+}
