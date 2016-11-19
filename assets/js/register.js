@@ -82,7 +82,7 @@ btnLogin.addEventListener('click', e => {
 	database.ref().push(userInfo);
 	// Sign in
 	var promise = auth.signInWithEmailAndPassword(email, pass);
-promise.catch(e = > console.log(e.message)
+promise.catch(e => console.log(e.message)
 )
 
 })
@@ -106,7 +106,7 @@ btnSignUp.addEventListener('click', e => {
 	database.ref().push(userInfo);
 	// Create User
 	var promise = auth.createUserWithEmailAndPassword(email, pass);
-promise.catch(e = > console.log(e.message)
+promise.catch(e => console.log(e.message)
 )
 
 })
