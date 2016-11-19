@@ -1,3 +1,51 @@
+.fatface {
+    font-family: 'Abril Fatface', cursive;
+}
+
+.permanent {
+    font-family: 'Permanent Marker', cursive;
+}
+
+.poiret {
+    font-family: 'Poiret One', cursive;
+}
+
+.sigmar {
+    font-family: 'Sigmar One', cursive;
+}
+
+.rakkas {
+    font-family: 'Rakkas', cursive;
+}
+
+.overlock {
+    font-family: 'Overlock', cursive;
+}
+
+.carter {
+    font-family: 'Carter One', cursive;
+}
+
+.forum {
+    font-family: 'Forum', cursive;
+}
+
+.bowlby {
+    font-family: 'Bowlby One SC', cursive;
+}
+
+.amatica {
+    font-family: 'Amatica SC', cursive;
+}
+
+.turncoat {
+    font-family: 'Walter Turncoat', cursive;
+}
+
+.patrick {
+    font-family: 'Patrick Hand SC', cursive;
+}
+
 html, body {
     height: 100%;
     margin: 0;
@@ -186,3 +234,4 @@ h1, h2, h3, h4, h5, h6 {
 .ui-24 .ui-content h5 a{
     color:#999;
 }
+

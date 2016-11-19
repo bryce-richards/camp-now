@@ -3,7 +3,7 @@ var placesURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 var googleKey = "key=AIzaSyCdoBhJmWHEJOiiQdnUZLTGsHblPpbYvr0";
 var componentsURL = "components=country:US&";
 var ridbURL = "https://ridb.recreation.gov/api/v1/facilities.json";
-var trailsURL = "https://ridb.recreation.gov/api/v1/trails/USFS/";
+var trailsURL = "https://ridb.recreation.gov/api/v1/trails/USFS.json";
 var ridbKey = "?apikey=A54C72EE122C4515B11636C8FE9F234C&";
 
 // save home marker for future directions feature
@@ -15,9 +15,6 @@ var globalInfoWindow;
 // markers array
 var markers = [];
 
-// trail markers
-var trailMarkers = [];
-
 // map object
 var map;
 
@@ -26,8 +23,6 @@ var circle;
 
 // global map moved boolean
 var mapMoved = false;
-
-var bounds;
 
 // INITIAL MAP DISPLAY
 function initMap() {
@@ -252,7 +247,7 @@ function initMap() {
           ]
         }
       ],
-      {name: 'Retro'});
+      {name: "Retro"});
 
   // create new google map centered on U.S.
   map = new google.maps.Map(document.getElementById('map'), {
@@ -266,8 +261,8 @@ function initMap() {
   });
 
   // set style of map
-  map.mapTypes.set('styled_map', retroMap);
-  map.setMapTypeId('styled_map');
+  map.mapTypes.set("styled_map", retroMap);
+  map.setMapTypeId("styled_map");
 
   globalInfoWindow = new google.maps.InfoWindow();
   // Try HTML5 geolocation.
@@ -279,7 +274,7 @@ function initMap() {
       };
 
       var lodgeIcon = {
-        url: 'assets/images/icons/png/lodge.png',
+        url: "assets/images/icons/png/lodge.png",
         scaledSize: new google.maps.Size(40, 40)
       };
 
@@ -354,9 +349,7 @@ function addSearch(radius, center) {
   var geocoder = new google.maps.Geocoder;
   geocoder.geocode({"location" : center}, function(results, status) {
     if (status === "OK") {
-      console.log(results);
       var destination = results[0].geometry.location;
-      console.log(destination);
       $("#latLngSearch").val(destination);
       var searchRadius = Math.round(radius);
       $("#radiusSearch").val(searchRadius);
@@ -381,12 +374,12 @@ function setMapOnAll(map) {
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
   }
+  markers = [];
+
 }
 
 // Removes the markers from the map, but keeps them in the array.
 function clearMarkers() {
-  markers = [];
-  trailMarkers = [];
   setMapOnAll(null);
 }
 
@@ -516,7 +509,6 @@ $("#searchBtn").on("click", function(event) {
 
     // add key to end of url
     queryURL += googleKey;
-    console.log(queryURL);
     $.ajax({url: queryURL, method: 'GET'})
     .done(function (response) {
       if (response.status === "OK") {
@@ -548,13 +540,11 @@ $("#searchBtn").on("click", function(event) {
 // FUNCTION TO PREPARE DATA FOR MARKER AND RESULTS DISPLAY
 function buildMarkers(requestArray) {
   for (var i = 0; i < requestArray.length; i++) {
-    console.log(requestArray[i]);
 
     var types = requestArray[i].types;
     var markerIcon = markerType(types);
     var rating = requestArray[i].rating;
     var name = requestArray[i].name;
-    // var address = requestArray[i].formatted_address;
     var vicinity = requestArray[i].vicinity;
     var location = {
       lat: requestArray[i].geometry.location.lat,
@@ -563,8 +553,12 @@ function buildMarkers(requestArray) {
     addMarker(location, markerIcon, name, vicinity);
     displayResults(name, rating, location.lat, location.lng);
   }
-  // set view to fit markers
-  bounds = new google.maps.LatLngBounds();
+  setTimeout(function() {
+    $("#resultsBtn").fadeIn(500);
+  }, 5000);
+
+    // set view to fit markers
+  var bounds = new google.maps.LatLngBounds();
   for (var j = 0; j < markers.length; j++) {
     bounds.extend(markers[j].getPosition());
   }
@@ -572,6 +566,7 @@ function buildMarkers(requestArray) {
     circle.setMap(null);
   }
   map.fitBounds(bounds);
+
 }
 
 // FUNCTION TO ADD A MARKER TO THE MAP
@@ -587,7 +582,7 @@ function addMarker(location, markerType, name, vicinity) {
     icon: markerIcon,
     animation: google.maps.Animation.DROP
   });
-
+  console.log(marker);
   google.maps.event.addListener(marker, "click", function() {
     if (globalInfoWindow) {
       globalInfoWindow.close();
@@ -616,7 +611,7 @@ function markerType(types) {
 // END OF FUNCTION TO RETURN ICON IMAGE
 
 // FUNCTION TO DISPLAY SEARCH RESULTS IN TABLE
-function displayResults(name, rating, lat, lng) {
+function displayResults(name, rate, lat, lng) {
   $("#results").show();
   var queryURL = ridbURL + ridbKey;
   var nameURL = jQuery.param({query : name}) + "&";
@@ -624,13 +619,11 @@ function displayResults(name, rating, lat, lng) {
   var description = "Not Available";
   var url = "Not Available";
   var phone = "Not Available";
+  var rating = rate;
   queryURL += jQuery.param({coordinates : lat}) + "," + lng + "&";
-  console.log(queryURL);
   $.ajax({url: queryURL, method: 'GET'})
   .done(function (response) {
-    console.log(response);
     var results = response.RECDATA;
-    console.log(results);
     if (results) {
       for (var i = 0; i < results.length; i++) {
         var facilityName = results[i].FacilityName;
@@ -671,6 +664,9 @@ function displayResults(name, rating, lat, lng) {
     var rowName = $("<td>");
     rowName.html("<h3>" + name + "</h3>");
     var rowRating = $("<td>");
+    if (!rating) {
+      rating = "Not Available";
+    }
     rowRating.html("<h3>" + rating + "</h3>");
     var rowDescription = $("<td>");
     rowDescription.html(description);
@@ -686,7 +682,6 @@ function displayResults(name, rating, lat, lng) {
     rowSave.append(saveButton);
     tableRow.append(rowName).append(rowRating).append(rowDescription).append(rowPhone).append(rowURL).append(rowTrails).append(rowSave);
     $("#resultsTableBody").append(tableRow);
-      $("#resultsBtn").fadeIn(500);
   }
 }
 // END OF FUNCTION TO DISPLAY RESULTS
@@ -705,9 +700,8 @@ $("#resultsBtn").on("click", function() {
 // END OF RESULTS BUTTON EVENT
 
 
-$("#resultsTableBody").on("click", ".trailBtn", function(event) {
+$("#resultsTableBody").on("click", "button", function(event) {
   event.preventDefault();
-  clearMarkers();
 
   if ($(".ui-24").hasClass("open")) {
     $(".ui-24").animate({"left":"-300px"},"300").removeClass("open");
@@ -724,39 +718,38 @@ function trailFinder(lat, lng, radius) {
   if (radius) {
     queryURL += jQuery.param({radius : radius});
   }
+  console.log(queryURL);
   $.ajax({url: queryURL, method: 'GET'})
   .done(function (response) {
-    console.log(response);
     var results = response.RECDATA;
     if (results) {
-      var searchResults = 5;
-      if (results.length < 5) {
+      var searchResults = 10;
+      if (results.length < searchResults) {
         searchResults = results.length;
       }
       for (var i = 0; i < searchResults; i++) {
         var name = results[i].TrailName;
         var geo = results[i].GEOM;
-        geo = geo.substring(11).replace(/[()]/g, "").replace(/"/g, "").split(" ");
-        var lat = parseFloat(geo[0].replace(/,/g, ''));
-        var lng = parseFloat(geo[1].replace(/,/g, ''));
-        latLng = {
-          lat: lat,
-          lng: lng
-        };
-        addTrailMarker(latLng, "panel.png", name);
+        console.log(results[i]);
+        if (geo) {
+          geo = geo.substring(11).replace(/[()]/g, "").replace(/"/g, "").split(" ");
+          var lng = parseFloat(geo[0].replace(/,/g, ''));
+          var lat = parseFloat(geo[1].replace(/,/g, ''));
+          latLng = {
+            lat: lat,
+            lng: lng
+          };
+        }
+        if (name && geo) {
+          addTrailMarker(latLng, name);
+        }
       }
-      // set view to fit markers
-      bounds = new google.maps.LatLngBounds();
-      for (var j = 0; j < trailMarkers.length; j++) {
-        bounds.extend(trailMarkers[j].getPosition());
-      }
-      map.fitBounds(bounds);
 
-      var offset = $("#map").offset();
+      var offset = $("#mapDiv").offset();
       $("html, body").animate({scrollTop : offset.top - 50}, 500);
     }
     else {
-      var offset = $("#map").offset();
+      var offset = $("#mapDiv").offset();
       $("html, body").animate({scrollTop : offset.top - 50}, 500);
       if (globalInfoWindow) {
         globalInfoWindow.close();
@@ -770,26 +763,28 @@ function trailFinder(lat, lng, radius) {
   });
 }
 
-function addTrailMarker(location, markerType, name) {
-  var markerURL = "assets/images/icons/png/" + markerType;
+function addTrailMarker(location, name) {
+  var markerURL = "assets/images/icons/png/panel.png";
   var markerIcon = {
     url: markerURL,
     scaledSize: new google.maps.Size(40, 40)
   };
-  var trailMarker = new google.maps.Marker({
+  var latLng = new google.maps.LatLng(location);
+  var marker = new google.maps.Marker({
     map: map,
-    position: location,
+    position: latLng,
     icon: markerIcon,
     animation: google.maps.Animation.DROP
   });
+  console.log(marker);
 
-  google.maps.event.addListener(trailMarker, "click", function() {
+  google.maps.event.addListener(marker, "click", function() {
     if (globalInfoWindow) {
       globalInfoWindow.close();
     }
     globalInfoWindow.setContent("<div><h5>" + name + "</h5>");
     globalInfoWindow.open(map, this);
   });
-  trailMarkers.push(trailMarker);
+  markers.push(marker);
 
 }
