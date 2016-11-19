@@ -37,11 +37,25 @@ option {
 }
 
 #searchHeader {
-    text-align: center;
     border: none;
     margin: 0;
     font-family: 'Permanent Marker', cursive;
     color: #89DE7F;
+}
+
+#resultsTable h2 {
+    font-family: 'Permanent Marker', cursive;
+    color: #89DE7F;
+}
+
+#resultsTableBody h3 {
+    font-family: 'Overlock', cursive;
+    color: #9EC77B;
+}
+
+#resultsTableBody button{
+    height: 30px;
+    margin: 15px 0;
 }
 
 .form-group {

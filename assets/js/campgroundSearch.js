@@ -21,8 +21,15 @@ var markers = [];
 // map object
 var map;
 
-// initial map display on page load
+// global circle object
+var circle;
+
+// global map moved boolean
+var mapMoved = false;
+
+// INITIAL MAP DISPLAY
 function initMap() {
+  $("#resultsBtn").fadeOut(500);
   $("#results").hide();
   $("#resultsTableBody").empty();
   // retro map style
@@ -288,36 +295,47 @@ function initMap() {
     handleLocationError(false, globalInfoWindow, map.getCenter());
   }
   var timer;
-  var circle = new google.maps.Circle();
+  circle = new google.maps.Circle();
   map.addListener("mousedown", function(event) {
-    circle.setMap(null);
-    if($(".ui-24").hasClass("open")) {
-      $(".ui-24").animate({"left":"-300px"},"300").removeClass("open");
-    }
-    var location = event.latLng;
-    var radius = 8046.7;
-    circle.setOptions({
-      strokeColor: "#FF0000",
-      strokeOpacity: .8,
-      strokeWeight: 2,
-      fillColor: "#FF0000",
-      map: map,
-      center: location,
-      radius: radius
-    });
-    timer = setInterval(function() {
-      radius += 1609.3;
-      circle.setRadius(radius);
+    setTimeout(function() {
+      if (!mapMoved) {
+        circle.setMap(null);
+        if ($(".ui-24").hasClass("open")) {
+          $(".ui-24").animate({"left": "-300px"}, "300").removeClass("open");
+        }
+        var location = event.latLng;
+        var radius = 8046.7;
+        circle.setOptions({
+          strokeColor: "#FF0000",
+          strokeOpacity: .8,
+          strokeWeight: 2,
+          fillColor: "#FF0000",
+          map: map,
+          center: location,
+          radius: radius
+        });
+        timer = setInterval(function () {
+          radius += 1609.3;
+          circle.setRadius(radius);
+        }, 100);
+      }
     }, 100);
+  });
+  map.addListener("dragstart", function() {
+    mapMoved = true;
+  });
+  map.addListener("dragend", function() {
+    mapMoved = false;
   });
   circle.addListener("mouseup", function() {
     clearInterval(timer);
     var radius = circle.getRadius() / 1609.34;
     var location = circle.getCenter();
     addSearch(radius, location);
+    mapMoved = true;
   });
 }
-// end of init map function
+// END OF INITIAL MAP DISPLAY
 
 // fills and opens search query
 function addSearch(radius, center) {
@@ -565,13 +583,16 @@ function buildMarkers(requestArray) {
   for (var j = 0; j < markers.length; j++) {
     bounds.extend(markers[j].getPosition());
   }
+  if (circle) {
+    circle.setMap(null);
+  }
   map.fitBounds(bounds);
 }
 
 function displayResults(name, rating, id) {
   var tableRow = $("<tr>");
   var rowName = $("<td>");
-  rowName.html("<h2>" + name + "</h2>");
+  rowName.html("<h3>" + name + "</h3>");
   var rowRating = $("<td>");
   rowRating.html("<h3>" + rating + "</h3>");
   var rowButton = $("<button>").addClass("saveBtn").attr("id", id).text("Save to My List");
@@ -580,10 +601,17 @@ function displayResults(name, rating, id) {
     $("#resultsTableBody").append(tableRow);
 }
 
-
-$("#resultsLink").on("click", function() {
+// RESULTS BUTTON EVENT
+$("#resultsBtn").on("click", function() {
+  if ($(".ui-24").hasClass("open")) {
+    $(".ui-24").animate({"left": "-300px"}, "300").removeClass("open");
+  }
+  var offset = $("#results").offset();
+  $("html, body").animate({scrollTop : offset.top - 50}, 500);
   $("#resultsBtn").fadeOut(500);
 });
+// END OF RESULTS BUTTON EVENT
+
 
 // $(document).getElementsByClass("saveBtn").on("click", function(event) {
 //   event.preventDefault();
