@@ -1,13 +1,13 @@
 $(document).ready(function(){
-  $(".ui-24 .ui-button button").click(function(event) {
-    event.preventDefault();
-    if($(".ui-24").hasClass("open")) {
-      $(".ui-24").animate({"left":"-300px"},"300").removeClass("open");
-    } else {
-      $(".ui-24").animate({"left":"0px"},"300").addClass("open");
-    }
-  });
+
 });
+
+var corsProxy = "https://crossorigin.me/";
+var placesURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+var googleKey = "key=AIzaSyCdoBhJmWHEJOiiQdnUZLTGsHblPpbYvr0";
+var componentsURL = "components=country:US&";
+var ridbURL = "https://ridb.recreation.gov/api/v1/facilities.json";
+var ridbKey = "?apikey=A54C72EE122C4515B11636C8FE9F234C&";
 
 // save homemarker for future directions feature
 var homeMarker;
@@ -337,6 +337,17 @@ function initMap() {
 }
 // END OF INITIAL MAP DISPLAY
 
+// SIDEBAR BUTTON CLICK EVENT
+$(".ui-24 .ui-button button").click(function(event) {
+  event.preventDefault();
+  if($(".ui-24").hasClass("open")) {
+    $(".ui-24").animate({"left":"-300px"},"300").removeClass("open");
+  } else {
+    $(".ui-24").animate({"left":"0px"},"300").addClass("open");
+  }
+});
+// END OF SIDEBAR BUTTON CLICK EVENT
+
 // fills and opens search query
 function addSearch(radius, center) {
   var geocoder = new google.maps.Geocoder;
@@ -383,7 +394,7 @@ $("#resetBtn").on("click", function() {
   if ($(".ui-24").hasClass("open")) {
     $(".ui-24").animate({"left":"-300px"},"300").removeClass("open");
   }
-  $("#resultsBtn").fadeIn(500);
+  $("#resultsBtn").fadeOut(500);
   initMap();
   $("#resultsSearch").val(20);
   clearMarkers();
@@ -391,10 +402,7 @@ $("#resetBtn").on("click", function() {
     circle.setMap(null);
   }
 });
-var corsProxy = "https://crossorigin.me/";
-var placesURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-var googleKey = "key=AIzaSyCdoBhJmWHEJOiiQdnUZLTGsHblPpbYvr0";
-var componentsURL = "components=country:US&";
+
 
 $("#searchBtn").on("click", function(event) {
   event.preventDefault();
@@ -574,10 +582,8 @@ function buildMarkers(requestArray) {
       lng: requestArray[i].geometry.location.lng
     };
     addMarker(location, markerIcon, name, rating, vicinity);
-    displayResults(name, rating, placeID);
+    displayResults(name, rating, placeID, location.lat, location.lng);
   }
-  $("#results").show();
-  $("#resultsBtn").fadeIn(500);
   // set view to fit markers
   var bounds = new google.maps.LatLngBounds();
   for (var j = 0; j < markers.length; j++) {
@@ -589,16 +595,70 @@ function buildMarkers(requestArray) {
   map.fitBounds(bounds);
 }
 
-function displayResults(name, rating, id) {
-  var tableRow = $("<tr>");
-  var rowName = $("<td>");
-  rowName.html("<h3>" + name + "</h3>");
-  var rowRating = $("<td>");
-  rowRating.html("<h3>" + rating + "</h3>");
-  var rowButton = $("<button>").addClass("saveBtn").attr("id", id).text("Save to My List");
-
-    tableRow.append(rowName).append(rowRating).append(rowButton);
+function displayResults(name, rating, id, lat, lng) {
+  $("#results").show();
+  var queryURL = ridbURL + ridbKey;
+  var nameURL = jQuery.param({query : name}) + "&";
+  queryURL += nameURL.split(" ").join("+");
+  var description;
+  var url;
+  queryURL += jQuery.param({coordinates : lat}) + "," + lng + "&";
+  console.log(queryURL);
+  $.ajax({url: queryURL, method: 'GET'})
+  .done(function (response) {
+    console.log(response);
+    var results = response.RECDATA;
+    console.log(results);
+    if (results) {
+      for (var i = 0; i < results.length; i++) {
+        var facilityName = results[i].FacilityName;
+        var facilityDescription = results[i].FacilityDescription;
+        var facilityURL = results[i].FacilityReservationURL;
+        console.log(facilityName);
+        if (facilityName == name) {
+          if (facilityDescription && facilityURL) {
+            description = facilityDescription;
+            url = facilityURL;
+            finishQuery();
+          } else if (facilityDescription) {
+            description = facilityDescription;
+            url = "No results";
+            finishQuery();
+          } else if (facilityURL) {
+            description = "No results";
+            url = facilityURL;
+            finishQuery();
+          } else {
+            description = "No results";
+            url = "No results";
+            finishQuery();
+          }
+        }
+      }
+    } else {
+      description = "No results";
+      url = "No results";
+      finishQuery();
+    }
+  });
+  function finishQuery() {
+    var tableRow = $("<tr>");
+    tableRow.attr("lat", lat);
+    tableRow.attr("lng", lng);
+    tableRow.attr("name", name);
+    var rowName = $("<td>");
+    rowName.html("<h3>" + name + "</h3>");
+    var rowRating = $("<td>");
+    rowRating.html("<h3>" + rating + "</h3>");
+    var rowButton = $("<button>").addClass("saveBtn").attr("id", id).text("Save");
+    var rowDescription = $("<td>");
+    rowDescription.html(description);
+    var rowURL = $("<td>");
+    rowURL.html("<h3>" + url + "</h3>");
+    tableRow.append(rowName).append(rowRating).append(rowButton).append(rowDescription).append(rowURL);
     $("#resultsTableBody").append(tableRow);
+    $("#resultsBtn").fadeIn(500);
+  }
 }
 
 // RESULTS BUTTON EVENT
@@ -611,11 +671,6 @@ $("#resultsBtn").on("click", function() {
   $("#resultsBtn").fadeOut(500);
 });
 // END OF RESULTS BUTTON EVENT
-
-
-// $(document).getElementsByClass("saveBtn").on("click", function(event) {
-//   event.preventDefault();
-// });
 
 // Adds a marker to the map and push to the array.
 function addMarker(location, markerType, name, rating, vicinity) {
@@ -644,3 +699,61 @@ function addMarker(location, markerType, name, rating, vicinity) {
 
 }
 
+$("#resultsTableBody").on("click", "td", function() {
+  var name = $(this).closest("tr").attr("name");
+  var lat = $(this).closest("tr").attr("lat");
+  var lng = $(this).closest("tr").attr("lng");
+
+});
+function ridbRequest(name, lat, lng) {
+  console.log(name);
+  var queryURL = ridbURL + ridbKey;
+  var nameURL = jQuery.param({query : name}) + "&";
+  nameURL = nameURL.split(" ").join("+");
+  queryURL += nameURL;
+  var coordinatesURL = jQuery.param({coordinates : lat}) + "," + lng + "&";
+  queryURL += coordinatesURL;
+  console.log(queryURL);
+  $.ajax({url: queryURL, method: 'GET'})
+  .done(function (response) {
+    console.log(response);
+    var results = response.RECDATA;
+    console.log(results);
+    if (results) {
+      for (var i = 0; i < results.length; i++) {
+        var facilityName = results[i].FacilityName;
+        var facilityDescription = results[i].FacilityDescription;
+        var facilityURL = results[i].FacilityReservationURL;
+        console.log(facilityName);
+        if (facilityName == name) {
+          if (facilityDescription && facilityURL) {
+            return {
+              description : facilityDescription,
+              url : facilityURL
+            }
+          } else if (facilityDescription) {
+            return {
+              description : facilityDescription,
+              url : "No results"
+            }
+          } else if (facilityURL) {
+            return {
+              description : "No results",
+              url : facilityURL
+            }
+          } else {
+            return {
+              description : "No results",
+              url : "No results"
+            }
+          }
+        }
+      }
+    } else {
+      return {
+        description : "No results",
+        url : "No results"
+      }
+    }
+  });
+}

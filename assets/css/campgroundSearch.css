@@ -53,6 +53,10 @@ option {
     color: #9EC77B;
 }
 
+#resultsTableBody p {
+    font-size: 10px;
+}
+
 #resultsTableBody button{
     height: 30px;
     margin: 15px 0;
@@ -88,13 +92,7 @@ option {
 h1, h2, h3, h4, h5, h6 {
     text-shadow: none;
 }
-#resultsBtn a {
-    font-size: 16px;
-    color: white;
-    font-weight:600;
-    text-align: center;
-    font-family: 'Overlock', cursive;
-}
+
 
 #mapButton {
     color: white;
