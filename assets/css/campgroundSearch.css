@@ -44,22 +44,35 @@ option {
 }
 
 #resultsTable h2 {
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Walter Turncoat', cursive;
     color: #89DE7F;
 }
 
 #resultsTableBody h3 {
     font-family: 'Overlock', cursive;
+    font-size: 14px;
     color: #9EC77B;
 }
 
 #resultsTableBody p {
-    font-size: 10px;
+    font-family: 'Overlock', cursive;
+    font-size: 12px;
+    color: #9EC77B;
+}
+
+#resultsTableBody td {
+    font-family: 'Overlock', cursive;
+    font-size: 14px;
+    color: #9EC77B;
+    max-width: 300px;
 }
 
 #resultsTableBody button{
+    font-family: 'Overlock', cursive;
     height: 30px;
-    margin: 15px 0;
+    margin: 15px;
+    background-color: #9EC77B;
+    color: white;
 }
 
 .form-group {

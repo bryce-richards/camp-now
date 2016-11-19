@@ -1,15 +1,12 @@
-$(document).ready(function(){
-
-});
-
 var corsProxy = "https://crossorigin.me/";
 var placesURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 var googleKey = "key=AIzaSyCdoBhJmWHEJOiiQdnUZLTGsHblPpbYvr0";
 var componentsURL = "components=country:US&";
 var ridbURL = "https://ridb.recreation.gov/api/v1/facilities.json";
+var trailsURL = "https://ridb.recreation.gov/api/v1/trails/USFS/";
 var ridbKey = "?apikey=A54C72EE122C4515B11636C8FE9F234C&";
 
-// save homemarker for future directions feature
+// save home marker for future directions feature
 var homeMarker;
 
 // single info window object for the whole document to use
@@ -17,6 +14,9 @@ var globalInfoWindow;
 
 // markers array
 var markers = [];
+
+// trail markers
+var trailMarkers = [];
 
 // map object
 var map;
@@ -27,11 +27,14 @@ var circle;
 // global map moved boolean
 var mapMoved = false;
 
+var bounds;
+
 // INITIAL MAP DISPLAY
 function initMap() {
   $("#resultsBtn").fadeOut(500);
   $("#results").hide();
   $("#resultsTableBody").empty();
+
   // retro map style
   var retroMap = new google.maps.StyledMapType(
       [
@@ -291,7 +294,6 @@ function initMap() {
 
     });
   } else {
-    // Browser doesn't support Geolocation
     handleLocationError(false, globalInfoWindow, map.getCenter());
   }
   var timer;
@@ -319,7 +321,7 @@ function initMap() {
           circle.setRadius(radius);
         }, 100);
       }
-    }, 100);
+    }, 200);
   });
   map.addListener("dragstart", function() {
     mapMoved = true;
@@ -332,7 +334,6 @@ function initMap() {
     var radius = circle.getRadius() / 1609.34;
     var location = circle.getCenter();
     addSearch(radius, location);
-    mapMoved = true;
   });
 }
 // END OF INITIAL MAP DISPLAY
@@ -385,6 +386,7 @@ function setMapOnAll(map) {
 // Removes the markers from the map, but keeps them in the array.
 function clearMarkers() {
   markers = [];
+  trailMarkers = [];
   setMapOnAll(null);
 }
 
@@ -535,44 +537,21 @@ $("#searchBtn").on("click", function(event) {
           buildMarkers(searchRequest);
         }
       } else {
-        var infoWindow = new google.maps.InfoWindow({map: map});
-        infoWindow.setPosition(homeMarker);
-        infoWindow.setContent("No Results!");
+        globalInfoWindow = new google.maps.InfoWindow({map: map});
+        globalInfoWindow.setPosition(homeMarker);
+        globalInfoWindow.setContent("No Results!");
       }
     });
   }
 });
 
-
-function markerType(types) {
-  for (var i = 0; i < types.length; i++) {
-    if (types[i] === "campground") {
-      return "bonfire.png";
-    }
-    else if (types[i] === "rv_park") {
-      return "caravan.png";
-    }
-    else if (types[i] === "lodging") {
-      return "cabin.png";
-    }
-    else if (types[i] === "park") {
-      return "picnic.png";
-    }
-  }
-}
-
-// function to display search results on the map
+// FUNCTION TO PREPARE DATA FOR MARKER AND RESULTS DISPLAY
 function buildMarkers(requestArray) {
   for (var i = 0; i < requestArray.length; i++) {
     console.log(requestArray[i]);
-    var placeID = requestArray[i].place_id;
 
     var types = requestArray[i].types;
     var markerIcon = markerType(types);
-    var photoRef = "";
-    if (requestArray[i].photos) {
-      photoRef = requestArray[i].photos[0].photo_reference;
-    }
     var rating = requestArray[i].rating;
     var name = requestArray[i].name;
     // var address = requestArray[i].formatted_address;
@@ -581,11 +560,11 @@ function buildMarkers(requestArray) {
       lat: requestArray[i].geometry.location.lat,
       lng: requestArray[i].geometry.location.lng
     };
-    addMarker(location, markerIcon, name, rating, vicinity);
-    displayResults(name, rating, placeID, location.lat, location.lng);
+    addMarker(location, markerIcon, name, vicinity);
+    displayResults(name, rating, location.lat, location.lng);
   }
   // set view to fit markers
-  var bounds = new google.maps.LatLngBounds();
+  bounds = new google.maps.LatLngBounds();
   for (var j = 0; j < markers.length; j++) {
     bounds.extend(markers[j].getPosition());
   }
@@ -595,13 +574,56 @@ function buildMarkers(requestArray) {
   map.fitBounds(bounds);
 }
 
-function displayResults(name, rating, id, lat, lng) {
+// FUNCTION TO ADD A MARKER TO THE MAP
+function addMarker(location, markerType, name, vicinity) {
+  var markerURL = "assets/images/icons/png/" + markerType;
+  var markerIcon = {
+    url: markerURL,
+    scaledSize: new google.maps.Size(40, 40)
+  };
+  var marker = new google.maps.Marker({
+    map: map,
+    position: location,
+    icon: markerIcon,
+    animation: google.maps.Animation.DROP
+  });
+
+  google.maps.event.addListener(marker, "click", function() {
+    if (globalInfoWindow) {
+      globalInfoWindow.close();
+    }
+    globalInfoWindow.setContent("<div><h5>" + name + "</h5></div><div><h6>Vicinity: " + vicinity + "</h6></div>");
+    globalInfoWindow.open(map, this);
+  });
+  markers.push(marker);
+}
+// END OF ADD MARKER FUNCTION
+
+// FUNCTION TO RETURN ICON IMAGE
+function markerType(types) {
+  for (var i = 0; i < types.length; i++) {
+    if (types[i] === "campground") {
+      return "bonfire.png";
+    } else if (types[i] === "rv_park") {
+      return "caravan.png";
+    } else if (types[i] === "lodging") {
+      return "cabin.png";
+    } else if (types[i] === "park") {
+      return "picnic.png";
+    }
+  }
+}
+// END OF FUNCTION TO RETURN ICON IMAGE
+
+// FUNCTION TO DISPLAY SEARCH RESULTS IN TABLE
+function displayResults(name, rating, lat, lng) {
   $("#results").show();
   var queryURL = ridbURL + ridbKey;
   var nameURL = jQuery.param({query : name}) + "&";
   queryURL += nameURL.split(" ").join("+");
-  var description;
-  var url;
+  var description = "Not Available";
+  var url = "Not Available";
+  var phone = "Not Available";
   queryURL += jQuery.param({coordinates : lat}) + "," + lng + "&";
   console.log(queryURL);
   $.ajax({url: queryURL, method: 'GET'})
@@ -614,30 +636,30 @@ function displayResults(name, rating, id, lat, lng) {
         var facilityName = results[i].FacilityName;
         var facilityDescription = results[i].FacilityDescription;
         var facilityURL = results[i].FacilityReservationURL;
-        console.log(facilityName);
+        var facilityPhone = results[i].FacilityPhone;
         if (facilityName == name) {
-          if (facilityDescription && facilityURL) {
+          if (facilityDescription) {
             description = facilityDescription;
-            url = facilityURL;
-            finishQuery();
-          } else if (facilityDescription) {
-            description = facilityDescription;
-            url = "No results";
-            finishQuery();
-          } else if (facilityURL) {
-            description = "No results";
-            url = facilityURL;
-            finishQuery();
           } else {
-            description = "No results";
-            url = "No results";
-            finishQuery();
+            description = "Not Available";
+          }
+          if (facilityURL) {
+            url = facilityURL;
+          } else {
+            url = "Not Available"
+          }
+          if (facilityPhone) {
+            phone = facilityPhone;
+          } else {
+            phone = "Not Available";
           }
         }
       }
+      finishQuery();
     } else {
-      description = "No results";
-      url = "No results";
+      description = "Not Available";
+      url = "Not Available";
+      phone = "Not Available";
       finishQuery();
     }
   });
@@ -650,16 +672,24 @@ function displayResults(name, rating, id, lat, lng) {
     rowName.html("<h3>" + name + "</h3>");
     var rowRating = $("<td>");
     rowRating.html("<h3>" + rating + "</h3>");
-    var rowButton = $("<button>").addClass("saveBtn").attr("id", id).text("Save");
     var rowDescription = $("<td>");
     rowDescription.html(description);
+    var rowPhone = $("<td>");
+    rowPhone.html("<h3>" + phone + "</h3>");
     var rowURL = $("<td>");
     rowURL.html("<h3>" + url + "</h3>");
-    tableRow.append(rowName).append(rowRating).append(rowButton).append(rowDescription).append(rowURL);
+    var rowTrails = $("<td>");
+    var trailsButton = $("<button>").addClass("trailBtn").text("Find Trails");
+    rowTrails.append(trailsButton);
+    var rowSave = $("<td>");
+    var saveButton = $("<button>").addClass("saveBtn").text("Save");
+    rowSave.append(saveButton);
+    tableRow.append(rowName).append(rowRating).append(rowDescription).append(rowPhone).append(rowURL).append(rowTrails).append(rowSave);
     $("#resultsTableBody").append(tableRow);
-    $("#resultsBtn").fadeIn(500);
+      $("#resultsBtn").fadeIn(500);
   }
 }
+// END OF FUNCTION TO DISPLAY RESULTS
 
 // RESULTS BUTTON EVENT
 $("#resultsBtn").on("click", function() {
@@ -668,92 +698,98 @@ $("#resultsBtn").on("click", function() {
   }
   var offset = $("#results").offset();
   $("html, body").animate({scrollTop : offset.top - 50}, 500);
-  $("#resultsBtn").fadeOut(500);
+  setTimeout(function() {
+    $("#resultsBtn").fadeOut(500);
+  }, 500);
 });
 // END OF RESULTS BUTTON EVENT
 
-// Adds a marker to the map and push to the array.
-function addMarker(location, markerType, name, rating, vicinity) {
+
+$("#resultsTableBody").on("click", ".trailBtn", function(event) {
+  event.preventDefault();
+  clearMarkers();
+
+  if ($(".ui-24").hasClass("open")) {
+    $(".ui-24").animate({"left":"-300px"},"300").removeClass("open");
+  }
+  var lat = $(this).closest("tr").attr("lat");
+  var lng = $(this).closest("tr").attr("lng");
+  trailFinder(lat, lng, 10);
+});
+
+
+function trailFinder(lat, lng, radius) {
+  var queryURL = corsProxy + trailsURL + ridbKey;
+  queryURL += jQuery.param({coordinates : lat}) + "," + lng + "&";
+  if (radius) {
+    queryURL += jQuery.param({radius : radius});
+  }
+  $.ajax({url: queryURL, method: 'GET'})
+  .done(function (response) {
+    console.log(response);
+    var results = response.RECDATA;
+    if (results) {
+      var searchResults = 5;
+      if (results.length < 5) {
+        searchResults = results.length;
+      }
+      for (var i = 0; i < searchResults; i++) {
+        var name = results[i].TrailName;
+        var geo = results[i].GEOM;
+        geo = geo.substring(11).replace(/[()]/g, "").replace(/"/g, "").split(" ");
+        var lat = parseFloat(geo[0].replace(/,/g, ''));
+        var lng = parseFloat(geo[1].replace(/,/g, ''));
+        latLng = {
+          lat: lat,
+          lng: lng
+        };
+        addTrailMarker(latLng, "panel.png", name);
+      }
+      // set view to fit markers
+      bounds = new google.maps.LatLngBounds();
+      for (var j = 0; j < trailMarkers.length; j++) {
+        bounds.extend(trailMarkers[j].getPosition());
+      }
+      map.fitBounds(bounds);
+
+      var offset = $("#map").offset();
+      $("html, body").animate({scrollTop : offset.top - 50}, 500);
+    }
+    else {
+      var offset = $("#map").offset();
+      $("html, body").animate({scrollTop : offset.top - 50}, 500);
+      if (globalInfoWindow) {
+        globalInfoWindow.close();
+      }
+      globalInfoWindow.setPosition(homeMarker);
+      globalInfoWindow.setContent("No Nearby Trails!");
+      globalInfoWindow.open();
+
+    }
+
+  });
+}
+
+function addTrailMarker(location, markerType, name) {
   var markerURL = "assets/images/icons/png/" + markerType;
   var markerIcon = {
     url: markerURL,
     scaledSize: new google.maps.Size(40, 40)
   };
-
-  var marker = new google.maps.Marker({
+  var trailMarker = new google.maps.Marker({
     map: map,
     position: location,
     icon: markerIcon,
     animation: google.maps.Animation.DROP
   });
 
-  google.maps.event.addListener(marker, "click", function() {
+  google.maps.event.addListener(trailMarker, "click", function() {
     if (globalInfoWindow) {
       globalInfoWindow.close();
     }
-    // map.setCenter(marker.getPosition());
-    globalInfoWindow.setContent("<div><h5>" + name + "</h5></div><div><h6>Vicinity: " + vicinity + "</h6></div><div><h6>Rating: " + rating + "</h6></div>");
+    globalInfoWindow.setContent("<div><h5>" + name + "</h5>");
     globalInfoWindow.open(map, this);
   });
-  markers.push(marker);
+  trailMarkers.push(trailMarker);
 
-}
-
-$("#resultsTableBody").on("click", "td", function() {
-  var name = $(this).closest("tr").attr("name");
-  var lat = $(this).closest("tr").attr("lat");
-  var lng = $(this).closest("tr").attr("lng");
-
-});
-function ridbRequest(name, lat, lng) {
-  console.log(name);
-  var queryURL = ridbURL + ridbKey;
-  var nameURL = jQuery.param({query : name}) + "&";
-  nameURL = nameURL.split(" ").join("+");
-  queryURL += nameURL;
-  var coordinatesURL = jQuery.param({coordinates : lat}) + "," + lng + "&";
-  queryURL += coordinatesURL;
-  console.log(queryURL);
-  $.ajax({url: queryURL, method: 'GET'})
-  .done(function (response) {
-    console.log(response);
-    var results = response.RECDATA;
-    console.log(results);
-    if (results) {
-      for (var i = 0; i < results.length; i++) {
-        var facilityName = results[i].FacilityName;
-        var facilityDescription = results[i].FacilityDescription;
-        var facilityURL = results[i].FacilityReservationURL;
-        console.log(facilityName);
-        if (facilityName == name) {
-          if (facilityDescription && facilityURL) {
-            return {
-              description : facilityDescription,
-              url : facilityURL
-            }
-          } else if (facilityDescription) {
-            return {
-              description : facilityDescription,
-              url : "No results"
-            }
-          } else if (facilityURL) {
-            return {
-              description : "No results",
-              url : facilityURL
-            }
-          } else {
-            return {
-              description : "No results",
-              url : "No results"
-            }
-          }
-        }
-      }
-    } else {
-      return {
-        description : "No results",
-        url : "No results"
-      }
-    }
-  });
 }
