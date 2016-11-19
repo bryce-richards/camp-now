@@ -48,7 +48,7 @@ btnGoogle.addEventListener('click', function () {
 		// ...
 	}).catch(function (error) {
 		
-		console.log(error)
+		console.log(error);
 		// Handle Errors here.
 		var errorCode = error.code;
 		var errorMessage = error.message;
@@ -78,13 +78,14 @@ btnLogin.addEventListener('click', e => {
 		email: email,
 		pass: pass,
 		
-	}
+	};
 	database.ref().push(userInfo);
 	// Sign in
 	var promise = auth.signInWithEmailAndPassword(email, pass);
-	promise.catch(e => console.log(e.message));
+promise.catch(e = > console.log(e.message)
+)
 
-});
+})
 
 // Add signup event
 btnSignUp.addEventListener('click', e => {
@@ -101,13 +102,14 @@ btnSignUp.addEventListener('click', e => {
 		email: email,
 		pass: pass,
 		
-	}
+	};
 	database.ref().push(userInfo);
 	// Create User
 	var promise = auth.createUserWithEmailAndPassword(email, pass);
-	promise.catch(e => console.log(e.message));
-	
-});
+promise.catch(e = > console.log(e.message)
+)
+
+})
 
 // Store User into Database
 database.ref().on("child_added", function (childSnapshot) {
@@ -120,8 +122,8 @@ database.ref().on("child_added", function (childSnapshot) {
 // Logout
 btnLogOut.addEventListener('click', e => {
 	firebase.auth().signOut();
-});
+})
 
 
 
-});
+})
