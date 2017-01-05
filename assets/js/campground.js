@@ -1,6 +1,6 @@
 var corsProxy = "https://crossorigin.me/";
 var placesURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-var googleKey = "key=AIzaSyCf5_b8L-tbHz_DWg9Elc93ifYACovSq3A";
+var googleKey = "key=AIzaSyAkDqVTglMKvWyAFsCHEUwXq8hDCdcOLeo";
 var componentsURL = "components=country:US&";
 var ridbURL = "https://ridb.recreation.gov/api/v1/facilities.json";
 var trailsURL = "https://ridb.recreation.gov/api/v1/trails/USFS.json";
