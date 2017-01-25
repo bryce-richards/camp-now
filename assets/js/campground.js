@@ -509,12 +509,9 @@ $("#searchBtn").on("click", function(event) {
 
     // add key to end of url
     queryURL += googleKey;
-    console.log('QUERY URL: ', queryURL);
     $.ajax({url: queryURL, method: 'GET'})
     .done(function (response) {
-      console.log('GOOGLE RESPONSE RESEIVED', response);
       if (response.status === "OK") {
-        var results = response.results;
         console.log('GOOGLE KEY RESULTS',results);
         // limit to top 10 responses
         if (results.length < resultsInput) {
