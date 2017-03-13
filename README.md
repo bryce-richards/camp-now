@@ -1,1 +1,23 @@
-# secret-project
+# Camp Now
+
+Explore Your Neighborhood. Discover The World.
+
+Find all the great campsites, RV parks, Lodging, and recreational parks the world has to offer.
+
+## Demo
+
+[Work In Progress] (https://camp-now.herokuapp.com/index.html)
+
+## To Use
+
+*Please Note: We are currently working out bugs with the Google Maps API*
+
+When you select "Find a Campsite," the application will request to know your location and center the map accordingly.
+
+You can search for a campsite by name, location, or using a custom radius search tool, simply select on the map where you'd like to search and hold until the desired radius is met. The appropriate search parameters will automatically fill out for you.
+
+## Authors
+
+* Bryce Richards
+* Kevin Duong
+* Kris Lai
