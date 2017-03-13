@@ -8,6 +8,8 @@ Find all the great campsites, RV parks, Lodging, and recreational parks the worl
 
 [Work In Progress] (https://camp-now.herokuapp.com/index.html)
 
+![Camp Now] (https://github.com/bryce-richards/camp-now/blob/master/CampNow.png)
+
 ## To Use
 
 *Please Note: We are currently working out bugs with the Google Maps API*
