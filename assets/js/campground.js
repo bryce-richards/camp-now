@@ -30,6 +30,7 @@ function initMap() {
   $("#results").hide();
   $("#resultsTableBody").empty();
 
+  
   // retro map style
   var retroMap = new google.maps.StyledMapType(
       [
