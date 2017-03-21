@@ -27,6 +27,6 @@ You can search for a campsite by name, location, or using a custom radius search
 
 ## Authors
 
-* Bryce Richards
-* Kevin Duong
-* Kris Lai
+- [Bryce Richards](https://github.com/bryce-richards)
+- [Kevin Duong](https://github.com/kevduong)
+- [Kris Lai](https://github.com/PocketThi3f)
