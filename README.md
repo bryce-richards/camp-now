@@ -6,9 +6,9 @@ Find all the great campsites, RV parks, Lodging, and recreational parks the worl
 
 ## Demo
 
-[Work In Progress] (https://camp-now.herokuapp.com/index.html)
+[Work In Progress](https://camp-now.herokuapp.com/index.html)
 
-![Camp Now] (https://github.com/bryce-richards/camp-now/blob/master/CampNow.png)
+![Camp Now](https://github.com/bryce-richards/camp-now/blob/master/CampNow.png)
 
 ## To Use
 
@@ -20,13 +20,12 @@ You can search for a campsite by name, location, or using a custom radius search
 
 ## Technology
 
-* [JavaScript] (https://www.javascript.com/)
-* [jQuery] (https://jquery.com/)
-* [Google Maps JavaScript API] (https://developers.google.com/maps/documentation/javascript/)
-* [Firebase] (https://firebase.google.com/)
+* [JavaScript](https://www.javascript.com/)
+* [jQuery](https://jquery.com/)
+* [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/)
+* [Firebase](https://firebase.google.com/)
 
 ## Authors
 
 * Bryce Richards
 * Kevin Duong
-* Kris Lai
