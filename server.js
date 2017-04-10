@@ -8,20 +8,20 @@ var PORT = process.env.PORT || 3000;
 
 var app = express();
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.text());
+app.use(bodyParser.json({ type: "application/vnd.api+json" }));
+
 app.use(express.static(process.cwd() + "/public"));
-
-app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(methodOverride("_method"));
 
 var exphbs = require("express-handlebars");
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
-
-var burgerRoutes = require("./controllers/burgers_controllers.js");
-
-app.use(burgerRoutes);
+//
+// require("./routes/campground-routes")(app);
 
 db.sequelize.sync().then(function() {
     app.listen(PORT, function() {
