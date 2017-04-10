@@ -682,13 +682,20 @@ function displayResults(name, rate, lat, lng) {
         rowPhone.html("<h3>" + phone + "</h3>");
         var rowURL = $("<td>");
         rowURL.html("<h3>" + url + "</h3>");
-        var rowTrails = $("<td>");
-        var trailsButton = $("<button>").addClass("trailBtn").text("Find Trails");
-        rowTrails.append(trailsButton);
-        var rowSave = $("<td>");
-        var saveButton = $("<button>").addClass("saveBtn").text("Save");
-        rowSave.append(saveButton);
-        tableRow.append(rowName).append(rowRating).append(rowDescription).append(rowPhone).append(rowURL).append(rowTrails).append(rowSave);
+        // var rowTrails = $("<td>");
+        // var trailsButton = $("<button>").addClass("trailBtn").text("Find Trails");
+        // rowTrails.append(trailsButton);
+        // var rowSave = $("<td>");
+        // var saveButton = $("<button>").addClass("saveBtn").text("Save");
+        // rowSave.append(saveButton);
+        tableRow
+            .append(rowName)
+            .append(rowRating)
+            .append(rowDescription)
+            .append(rowPhone)
+            .append(rowURL);
+            // .append(rowTrails)
+            // .append(rowSave);
         $("#resultsTableBody").append(tableRow);
     }
 }
